@@ -13,24 +13,22 @@ A collection of Terraform configurations that provision AWS infrastructure for f
 
 - Terraform (>= 1.0 recommended)
 - AWS CLI configured with appropriate credentials and region
-- create terraform.tfvars for each module with the required variables
+- Prepare terraform.tfvars for each module with the required variables.
+
 
 
 ## Getting started
 
-1. Configure the remote state backend first:
-   - cd into [terraform_backend](terraform_backend/) and run:
+for each step use the following commands:
      - terraform init
      - terraform plan
      - terraform apply
-2. For each environment component:
-   - Example for EKS:
-     - cd [eks](eks/)
-     - terraform init
-     - terraform plan -var-file="terraform.tfvars"
-     - terraform apply -var-file="terraform.tfvars"
-   - Example for CloudFront + S3:
-     - cd [cloudfront_s3](cloudfront_s3/)
-     - terraform init
-     - terraform apply -var-file="terraform.tfvars"
+1. Configure the remote state backend first:
+   - cd into [terraform_backend](terraform_backend/) and run terrafrom commands.
+2. Create EKS & Network & Storage
+   - cd [eks](eks/) and run terrafrom commands.
+   - *once eks cluster created, apply the k8s resources. 
+3. Create CloudFront + S3:
+     - Run this only after applying k8s resources on EKS - you'll need to use the NLB URL. 
+     - cd [cloudfront_s3](cloudfront_s3/) and run terrafrom commands.
 
