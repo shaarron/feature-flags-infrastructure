@@ -20,9 +20,9 @@ A collection of Terraform configurations that provision AWS infrastructure for f
 ## Getting started
 
 for each step use the following commands:
-     - terraform init
-     - terraform plan
-     - terraform apply
+- terraform init
+- terraform plan
+- terraform apply
 1. Configure the remote state backend first:
    - cd into [terraform_backend](terraform_backend/) and run terrafrom commands.
 2. Create EKS & Network & Storage
