@@ -70,10 +70,10 @@ resource "aws_cloudfront_distribution" "cf" {
     origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
   }
 
-  # Origin 2: Load Balancer (NLB)
+  # Origin 2: Network Load Balancer (NLB)
   origin {
     domain_name = var.nlb_domain
-    origin_id   = "alb_origin"
+    origin_id   = "nlb_origin"
       custom_origin_config {
         http_port              = 80
         https_port             = 443
@@ -94,7 +94,7 @@ resource "aws_cloudfront_distribution" "cf" {
   # Behavior for NLB
   ordered_cache_behavior {
     path_pattern           = "/flags*"
-    target_origin_id       = "alb_origin"
+    target_origin_id       = "nlb_origin"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET","HEAD"]

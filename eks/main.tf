@@ -16,8 +16,9 @@ module "eks" {
   cluster_version = var.cluster_version
   subnet_ids     = module.network.private_subnet_ids
   vpc_id          = module.network.vpc_id
-# todo:  turn to private later
-  cluster_endpoint_public_access  = true
+
+  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access  = false
   enable_cluster_creator_admin_permissions = true 
 
   eks_managed_node_groups = {
