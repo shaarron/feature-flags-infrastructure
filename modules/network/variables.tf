@@ -5,12 +5,11 @@ variable "vpc_cidrs" {
 
 variable name_prefix {
   type        = string
-  default     = "feature-flags"
-  description = "Prefix to attach to each of the names of the resources"
+  description = "Prefix for resource names usually in the format project-env"
 }
 
 variable "ha" {
   type        = number
-  default     = "3"
+  default     = 3
   description = "High Availabilty Redundancy"
 }

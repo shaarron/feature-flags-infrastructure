@@ -1,9 +1,25 @@
 variable "aws_region" {
-  description = "AWS region for the S3 bucket"
-  type        = string
+  type = string
+}
+variable "name_prefix" {
+  type = string
+}
+variable "terraform_backend" {
+  type = string
+}
+variable "force_destroy" {
+  type = bool
+}
+variable "versioning" {
+  type = bool
+}
+variable "block_public_access" {
+  type = bool
+}
+variable "force_ssl_policy" {
+  type = bool
 }
 
-variable "terraform_backend" {
-  description = "Name of the S3 bucket for Terraform state backend"
-  type        = string
-}
+variable "server_side_encryption" {
+  type = bool
+}         
