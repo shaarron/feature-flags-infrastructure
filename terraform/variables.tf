@@ -11,18 +11,18 @@ variable "vpc_cidrs" {
 
 variable "common_tags" {
   default = {
-    owner           = "terraform-eks"
-    managedBy       = "terraform"
-    app_name        = "feature-flags"
+    owner     = "terraform-eks"
+    managedBy = "terraform"
+    app_name  = "feature-flags"
   }
 }
 
 variable "cluster_version" {
-    type      = string
+  type = string
 }
 
 variable "node_type" {
-  type        = string
+  type = string
 }
 
 variable "aws_region" {
@@ -39,13 +39,13 @@ variable "project_name" {
 
 variable "web_app_domain_name" {
   description = "Domain name for the web application"
-  type        = string    
+  type        = string
 }
 
 variable "cert_domain_name" {
   description = "Domain name for the SSL certificate (for CloudFront)"
-  type        = string    
-  
+  type        = string
+
 }
 
 variable "s3_static_bucket_name" {
@@ -57,12 +57,6 @@ variable "s3_force_destroy" {
   description = "Force destroy the S3 bucket and its contents"
   type        = bool
   default     = false
-}
-
-variable "s3_prevent_destroy" {
-  description = "Prevent the S3 bucket from being destroyed"
-  type        = bool
-  default     = true
 }
 
 variable "versioning" {
@@ -115,14 +109,14 @@ variable "origin_ssl_protocols" {
   default     = ["TLSv1.2"]
 }
 
-variable "s3_origin" {
-  description = "S3 origin configuration"
-  type = object({
-    domain_name = string
-    region      = string
-  })
+# variable "s3_origin" {
+#   description = "S3 origin configuration"
+#   type = object({
+#     domain_name = string
+#     # region      = string
+#   })
 
-}
+# }
 
 variable "default_cache_behavior" {
   description = "Default cache behavior settings for CloudFront distribution"
@@ -137,17 +131,17 @@ variable "default_cache_behavior" {
 }
 
 variable "ordered_cache_behavior" {
-    description = "Defines additional path-based cache behaviors, evaluated in order before the default behavior (optional)."
-    type = list(object({
-        target_origin_id       = string
-        allowed_methods        = list(string)
-        cached_methods         = list(string)
-        viewer_protocol_policy = string
-        path_pattern           = string       
-        cache_policy_optimized = bool # use the optimized cache policy (true) or caching disabled (false).
-    }))
-    default = []
-}   
+  description = "Defines additional path-based cache behaviors, evaluated in order before the default behavior (optional)."
+  type = list(object({
+    target_origin_id       = string
+    allowed_methods        = list(string)
+    cached_methods         = list(string)
+    viewer_protocol_policy = string
+    path_pattern           = string
+    cache_policy_optimized = bool # use the optimized cache policy (true) or caching disabled (false).
+  }))
+  default = []
+}
 
 variable "geo_restriction_type" {
   description = "Type of geo restriction for CloudFront distribution"
@@ -168,6 +162,12 @@ variable "default_root_object" {
 variable "cf_aliases" {
   description = "List of aliases to associate with the CloudFront distribution"
   type        = list(string)
-  default     = []  
-  
+  default     = []
+
+}
+
+variable "github_private_key" {
+  description = "GitHub private key for accessing private repositories"
+  type        = string
+  sensitive   = true
 }

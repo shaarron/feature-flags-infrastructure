@@ -3,19 +3,14 @@ output "cluster_endpoint" {
 }
 
 output "SG" {
-    value = {
-        "cluster_primary_security_group_id" = module.eks.cluster_primary_security_group_id
-        "cluster_security_group_id" = module.eks.cluster_security_group_id
-        "node_security_group_id" = module.eks.node_security_group_id
-    }
+  value = {
+    "cluster_primary_security_group_id" = module.eks.cluster_primary_security_group_id
+    "cluster_security_group_id"         = module.eks.cluster_security_group_id
+    "node_security_group_id"            = module.eks.node_security_group_id
+  }
 }
 
 output "cluster_connect" {
-    value = "aws eks update-kubeconfig --region ${var.aws_region} --name ${module.eks.cluster_name}"
+  value = "aws eks update-kubeconfig --region ${var.aws_region} --name ${module.eks.cluster_name}"
 }
 
-## to test value retrieval
-# output "nlb_hostname" {
-#   description = "NLB DNS name discovered from ingress-nginx Service"
-#   value       = local.nlb_hostname
-# }

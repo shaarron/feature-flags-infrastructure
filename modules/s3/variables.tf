@@ -14,12 +14,6 @@ variable "force_destroy" {
   default     = true   
 }
 
-variable "prevent_destroy" {
-  description = "Prevent the bucket from being destroyed (even if it's empty)"
-  type        = bool
-  default     = true   
-}
-
 variable "versioning" {
   description = "Enable versioning"
   type        = bool

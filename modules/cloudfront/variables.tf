@@ -1,5 +1,5 @@
 variable "name_prefix" {
-  description = "Prefix for resource names usually in the format project-env"
+  description = "Prefix for naming resources"
   type        = string      
 }
 
@@ -15,9 +15,7 @@ variable "origin_access_control_origin_type" {
 
 variable "s3_origin" {
   description = "Configuration for an S3 origin"
-  type = object({
-    domain_name = string
-  })
+  type = string
 }
 
 variable "s3_bucket" {

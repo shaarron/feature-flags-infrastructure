@@ -1,28 +1,36 @@
 locals {
-  name_prefix = "${var.project_name}-${terraform.workspace}"
+  name_prefix = terraform.workspace
   nlb_hostname = one(
     data.kubernetes_service.ingress_nginx_controller.status[0].load_balancer[0].ingress[*].hostname
   )
 
-  nlb_name = split("-", split(".", local.nlb_hostname)[0])[0]
+  nlb_name  = split("-", split(".", local.nlb_hostname)[0])[0]
+  # full_host = "${terraform.workspace}.${var.web_app_domain_name}"
 
 }
 
 # Read the NLB hostname from the ingress-nginx controller Service
 data "kubernetes_service" "ingress_nginx_controller" {
   metadata {
-    name      = "ingress-nginx-controller"  # controller svc name
-    namespace = "default"             
+    name      = "ingress-nginx-controller" # controller svc name
+    namespace = "default"
   }
 
-  # depends_on = [helm_release.ingress_nginx]
+  provider = kubernetes.eks
+  depends_on = [
+    module.eks,                # ensures cluster exists
+    helm_release.ingress_nginx # ensures service exists
+  ]
+
 }
 
+
+
 module "network" {
-  source             = "../modules/network"
-  name_prefix        = local.name_prefix
-  vpc_cidrs          = var.vpc_cidrs
-  ha                 = var.ha
+  source      = "../modules/network"
+  name_prefix = local.name_prefix
+  vpc_cidrs   = var.vpc_cidrs
+  ha          = var.ha
 }
 
 module "eks" {
@@ -33,9 +41,9 @@ module "eks" {
   subnet_ids      = module.network.private_subnet_ids
   vpc_id          = module.network.vpc_id
 
-  cluster_endpoint_private_access = true
-  cluster_endpoint_public_access  = true
-  enable_cluster_creator_admin_permissions = true 
+  cluster_endpoint_private_access          = true
+  cluster_endpoint_public_access           = true
+  enable_cluster_creator_admin_permissions = true
 
   eks_managed_node_groups = {
     main = {
@@ -49,8 +57,12 @@ module "eks" {
   }
 }
 
+data "aws_eks_cluster_auth" "this" {
+  name       = module.eks.cluster_name
+  depends_on = [module.eks]
+}
 module "eks_blueprints_addons" {
-  source = "aws-ia/eks-blueprints-addons/aws"
+  source  = "aws-ia/eks-blueprints-addons/aws"
   version = "~> 1.0"
 
   cluster_name      = module.eks.cluster_name
@@ -60,7 +72,7 @@ module "eks_blueprints_addons" {
 
   eks_addons = {
     aws-ebs-csi-driver = {
-      most_recent = true
+      most_recent              = true
       service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
     }
     coredns = {
@@ -75,12 +87,49 @@ module "eks_blueprints_addons" {
   }
 }
 
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "kubernetes" {
+  alias                  = "eks"
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "kubectl" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+resource "helm_release" "ingress_nginx" {
+  name       = "ingress-nginx"
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  chart      = "ingress-nginx"
+
+  values = [
+    yamlencode({
+      controller = {
+        service = {
+          type = "LoadBalancer"
+        }
+      }
+    })
+  ]
+  depends_on = [module.eks]
+
+}
+
 module "ebs_csi_irsa_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
   role_name             = "${local.name_prefix}-ebs-csi"
   attach_ebs_csi_policy = true
-  version = "5.11.0"
+  version               = "5.11.0"
 
   oidc_providers = {
     ex = {
@@ -88,10 +137,6 @@ module "ebs_csi_irsa_role" {
       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
 }
 
 module "ebs_csi_storageclass" {
@@ -106,8 +151,6 @@ module "s3_static_files" {
 
   name_prefix                 = local.name_prefix
   bucket_name                 = var.s3_static_bucket_name
-  force_destroy               = var.s3_force_destroy
-  prevent_destroy             = var.s3_prevent_destroy
   versioning                  = var.versioning
   block_public_access         = var.block_public_access
   force_ssl_policy            = var.force_ssl_policy
@@ -116,23 +159,21 @@ module "s3_static_files" {
 }
 
 
-## must run after eks and k8s resources applied!
 module "cloudfront" {
-  source                            = "../modules/cloudfront"
-  aws_region                        = var.aws_region
-  name_prefix                       = local.name_prefix
-  aliases                           = var.cf_aliases
-
+  source      = "../modules/cloudfront"
+  aws_region  = var.aws_region
+  name_prefix = local.name_prefix
+  aliases     = ["feature-flags${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}.${var.web_app_domain_name}"]
 
   origin_domain_name     = local.nlb_hostname
   origin_id              = "nlb-origin"
   origin_protocol_policy = "http-only"
   origin_ssl_protocols   = ["TLSv1.2"]
-  
+
 
   ordered_cache_behavior = var.ordered_cache_behavior
 
-  s3_origin                         = var.s3_origin
+  s3_origin                         = module.s3_static_files.s3_bucket
   s3_bucket                         = module.s3_static_files.s3_bucket
   default_cache_behavior            = var.default_cache_behavior
   geo_restriction_type              = var.geo_restriction_type
@@ -141,21 +182,68 @@ module "cloudfront" {
 }
 
 module "route53" {
-  source      = "../modules/route53"
+  source = "../modules/route53"
+
+  depends_on = [
+    module.eks,
+    helm_release.ingress_nginx
+  ]
+
+  providers = {
+    kubernetes = kubernetes.eks
+  }
+
   aws_region  = var.aws_region
   domain_name = var.web_app_domain_name
   sub_domains = {
-    feature-flags = {
-      type = "cloudfront"
+    "feature-flags${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}" = {
+      type  = "cloudfront"
       cf_id = module.cloudfront.cloudfront_distribution_id
     }
-    grafana = {
-      type = "nlb"
+    "grafana${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}" = {
+      type     = "nlb"
       nlb_name = local.nlb_name
     }
-    kibana = {
-      type = "nlb"
+    "kibana${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}" = {
+      type     = "nlb"
       nlb_name = local.nlb_name
     }
   }
+}
+
+## argocd 
+resource "helm_release" "argocd" {
+  name       = "argocd"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd"
+  namespace  = "argocd"
+
+  create_namespace = true
+  version          = "8.1.3"
+
+  depends_on = [
+    module.eks,
+    module.eks_blueprints_addons,
+    helm_release.ingress_nginx
+  ]
+}
+
+# Create SSH-based Git repo secret for ArgoCD
+resource "kubectl_manifest" "argocd_repo_secret" {
+  yaml_body = <<YAML
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-feature-flags
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: git@github.com:shaarron/feature-flags-resources.git
+  sshPrivateKey: |
+    ${replace(var.github_private_key, "\n", "\n    ")}
+YAML
+
+  depends_on = [helm_release.argocd]
 }

@@ -4,9 +4,9 @@ resource "random_id" "suffix" {
 
 resource "aws_s3_bucket" "this" {
   bucket        = "${var.bucket_name}-${random_id.suffix.hex}"
-  force_destroy = var.force_destroy # force deletion of all objects when deleting bucket
+  force_destroy = false # force deletion of all objects when deleting bucket
   lifecycle {
-    prevent_destroy = var.prevent_destroy
+    prevent_destroy = true # prevent bucket from being destroyed
   }
     tags = {
     Project = "${var.name_prefix}-s3"
