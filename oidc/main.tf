@@ -23,7 +23,7 @@ resource "aws_iam_role" "gha_oidc_role" {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
         },
         StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:shaarron/feature-flags-service:ref:refs/heads/main"
+          "token.actions.githubusercontent.com:sub" = "repo:shaarron/feature-flags-app:ref:refs/heads/main"
         }
       }
     }]

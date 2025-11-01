@@ -24,8 +24,6 @@ data "kubernetes_service" "ingress_nginx_controller" {
 
 }
 
-
-
 module "network" {
   source      = "../modules/network"
   name_prefix = local.name_prefix
