@@ -7,9 +7,7 @@ web_app_domain_name = "its-sharon.com"
 cert_domain_name = "*.dev.its-sharon.com"
 
 # Network
-vpc_cidrs          = "10.0.0.0/16"
-ha                 = 2
-
+availability_zones = 2
 
 # EKS
 cluster_version    = "1.31"
@@ -23,6 +21,10 @@ s3_force_destroy     = true
 ## for argocd - while the repository is private
 github_private_key = <<EOKEY
 -----BEGIN OPENSSH PRIVATE KEY-----
-
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACAH+wINgupf9kwYWb3tKo9KyKIXGnmAvIyKwDPA3VHl8gAAAJhfOhV0XzoV
+dAAAAAtzc2gtZWQyNTUxOQAAACAH+wINgupf9kwYWb3tKo9KyKIXGnmAvIyKwDPA3VHl8g
+AAAECPqipDQ1f3iDEHruphc6P51C9JgZE5wLjINp2ABbdN6gf7Ag2C6l/2TBhZve0qj0rI
+ohcaeYC8jIrAM8DdUeXyAAAAEWFyZ29jZC1kZXBsb3kta2V5AQIDBA==
 -----END OPENSSH PRIVATE KEY-----
 EOKEY

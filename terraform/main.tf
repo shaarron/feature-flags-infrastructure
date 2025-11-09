@@ -28,7 +28,7 @@ module "network" {
   source      = "../modules/network"
   name_prefix = local.name_prefix
   vpc_cidrs   = var.vpc_cidrs
-  ha          = var.ha
+  availability_zones = var.availability_zones
 }
 
 module "eks" {

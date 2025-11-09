@@ -1,15 +1,11 @@
-# Declare the data source
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 locals {
-  min_ha = min(length(data.aws_availability_zones.available.names), var.ha)
-  total  = local.min_ha <= 1 ? 1 : local.min_ha
+  min_az = min(length(data.aws_availability_zones.available.names), var.availability_zones)
+  total  = local.min_az <= 1 ? 1 : local.min_az
 }
-
-
-####### VPC part ####### 
 
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidrs
@@ -27,17 +23,19 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_eip" "this" {
+  count = local.total
   domain = "vpc"
   tags = {
-    Name = "${var.name_prefix}-EIP"
+    Name = "${var.name_prefix}-EIP-${count.index}"
   }  
 }
 
 resource "aws_nat_gateway" "this" {
-  subnet_id = aws_subnet.public[0].id
-  allocation_id = aws_eip.this.id
+  count = local.total
+  subnet_id = aws_subnet.public[count.index].id
+  allocation_id = aws_eip.this[count.index].id
   tags = {
-    Name = "${var.name_prefix}-NAT-GW"
+    Name = "${var.name_prefix}-NAT-GW-${count.index}"
   }  
 }
 
@@ -54,14 +52,15 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table" "private" {
+  count = local.total
   vpc_id = aws_vpc.this.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.this.id
+    nat_gateway_id = aws_nat_gateway.this[count.index].id
   }
   tags = {
-    Name = "${var.name_prefix}-PRIVATE-RTB"
+    Name = "${var.name_prefix}-PRIVATE-RTB-${count.index}"
   }  
 }
 
@@ -96,5 +95,5 @@ resource "aws_route_table_association" "public" {
 resource "aws_route_table_association" "private" {
   count          = local.total
   subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private[count.index].id
 }

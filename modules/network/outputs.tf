@@ -9,8 +9,3 @@ output "private_subnet_ids" {
 output "vpc_id" {
   value = aws_vpc.this.id
 }
-
-output total_ha {
-  value       = local.total
-  description = "High Availabilty Redundancy"
-}

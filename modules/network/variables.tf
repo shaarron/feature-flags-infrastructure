@@ -8,8 +8,9 @@ variable name_prefix {
   description = "Prefix for resource names usually in the format project-env"
 }
 
-variable "ha" {
+variable "availability_zones" {
   type        = number
-  default     = 3
-  description = "High Availabilty Redundancy"
+  default     = 1
+  description = "Amount of availability zones to use for the VPC"
+  
 }

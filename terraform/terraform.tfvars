@@ -6,6 +6,8 @@ force_ssl_policy                  = true
 server_side_encryption            = true
 origin_access_control_origin_type = "s3"
 
+# network
+vpc_cidrs          = "10.0.0.0/16"
 
 default_cache_behavior = {
   allowed_methods        = ["GET", "HEAD"]

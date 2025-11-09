@@ -1,7 +1,7 @@
-variable "ha" {
+variable "availability_zones" {
   type        = number
-  default     = 3
-  description = "High Availabilty Redundancy"
+  default     = 1
+  description = "Amount of availability zones to use for the VPC"
 }
 
 variable "vpc_cidrs" {
