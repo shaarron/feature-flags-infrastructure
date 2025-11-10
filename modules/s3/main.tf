@@ -1,15 +1,8 @@
-resource "random_id" "suffix" {
-  byte_length = 4   
-}
-
 resource "aws_s3_bucket" "this" {
-  bucket        = "${var.bucket_name}-${random_id.suffix.hex}"
+  bucket        = "${var.bucket_name}"
   force_destroy = false # force deletion of all objects when deleting bucket
   lifecycle {
     prevent_destroy = true # prevent bucket from being destroyed
-  }
-    tags = {
-    Project = "${var.name_prefix}-s3"
   }
 }
 
@@ -57,7 +50,6 @@ resource "aws_s3_bucket_policy" "force_ssl_policy" {
 
 # S3 Bucket Policy to allow CloudFront access
 resource "aws_s3_bucket_policy" "allow_cloudfront" {
-  # count  = var.cloudfront_distribution_arn != "" ? 1 : 0
   bucket = aws_s3_bucket.this.id
 
   policy = jsonencode({
@@ -78,7 +70,6 @@ resource "aws_s3_bucket_policy" "allow_cloudfront" {
     ]
   })
 }
-
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "server_side_encryption" {
   count = var.server_side_encryption ? 1 : 0

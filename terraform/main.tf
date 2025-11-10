@@ -5,7 +5,6 @@ locals {
   )
 
   nlb_name  = split("-", split(".", local.nlb_hostname)[0])[0]
-  # full_host = "${terraform.workspace}.${var.web_app_domain_name}"
 
 }
 
@@ -144,11 +143,9 @@ module "ebs_csi_storageclass" {
   token                  = data.aws_eks_cluster_auth.this.token
 }
 
-module "s3_static_files" {
+module "s3_frontend" {
   source = "../modules/s3"
-
-  name_prefix                 = local.name_prefix
-  bucket_name                 = var.s3_static_bucket_name
+  bucket_name                 = "feature-flags-frontend-${local.name_prefix}-sharon"
   versioning                  = var.versioning
   block_public_access         = var.block_public_access
   force_ssl_policy            = var.force_ssl_policy
@@ -171,8 +168,8 @@ module "cloudfront" {
 
   ordered_cache_behavior = var.ordered_cache_behavior
 
-  s3_origin                         = module.s3_static_files.s3_bucket
-  s3_bucket                         = module.s3_static_files.s3_bucket
+  s3_origin                         = module.s3_frontend.s3_bucket
+  s3_bucket                         = module.s3_frontend.s3_bucket
   default_cache_behavior            = var.default_cache_behavior
   geo_restriction_type              = var.geo_restriction_type
   origin_access_control_origin_type = var.origin_access_control_origin_type

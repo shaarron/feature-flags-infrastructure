@@ -48,10 +48,10 @@ variable "cert_domain_name" {
 
 }
 
-variable "s3_static_bucket_name" {
-  description = "Name of the S3 bucket for frontend static content"
-  type        = string
-}
+# variable "frontend_s3_bucket_name" {
+#   description = "Name of the S3 bucket for frontend static content"
+#   type        = string
+# }
 
 variable "s3_force_destroy" {
   description = "Force destroy the S3 bucket and its contents"

@@ -1,7 +1,4 @@
 
-project_name = "feature-flags"
-aws_region = "ap-south-1"
-
 # Domain
 web_app_domain_name = "its-sharon.com"
 cert_domain_name = "*.its-sharon.com"
@@ -13,7 +10,3 @@ availability_zones                 = 3
 cluster_version    = "1.31"
 node_type          = "r6a.large"
 
-# S3
-s3_static_bucket_name = "ff-static-ui-dev"
-s3_force_destroy     = true
-prevent_destroy      = false
