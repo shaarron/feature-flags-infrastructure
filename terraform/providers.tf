@@ -11,13 +11,8 @@ terraform {
     }
   }
 
-  # backend configutation optional
-  # backend "s3" {
-  #   bucket         = "<YOUR_BUCKET_NAME>" 
-  #   key            = "terraform_modules/terraform.tfstate"
-  #   region         = "<YOUR_AWS_REGION>"
-  #   use_lockfile = true
-  #   }
+  backend "s3" {}
+  
 }
 
 provider "aws" {

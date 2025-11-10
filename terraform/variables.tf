@@ -109,15 +109,6 @@ variable "origin_ssl_protocols" {
   default     = ["TLSv1.2"]
 }
 
-# variable "s3_origin" {
-#   description = "S3 origin configuration"
-#   type = object({
-#     domain_name = string
-#     # region      = string
-#   })
-
-# }
-
 variable "default_cache_behavior" {
   description = "Default cache behavior settings for CloudFront distribution"
   type = object({
