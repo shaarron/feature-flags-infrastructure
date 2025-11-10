@@ -1,11 +1,21 @@
-module "terraform_backend" {
-  source = "../modules/s3"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
 
-  name_prefix            = var.name_prefix
-  bucket_name            = var.terraform_backend
-  force_destroy          = var.force_destroy
-  versioning             = var.versioning
-  block_public_access    = var.block_public_access
-  force_ssl_policy       = var.force_ssl_policy
-  server_side_encryption = var.server_side_encryption
+provider "aws" {
+  region = "ap-south-1"
+} 
+
+module "s3_terrafrom_backend" {
+  source = "../modules/s3"
+  bucket_name                 = "feature-flags-terraform-backend-sharon"
+  versioning                  = true
+  block_public_access         = true
+  force_ssl_policy            = true
+  server_side_encryption      = true
 }
