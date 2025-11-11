@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "this" {
-  bucket        = "${var.bucket_name}"
+  bucket        = var.bucket_name
   force_destroy = false # force deletion of all objects when deleting bucket
   lifecycle {
     prevent_destroy = true # prevent bucket from being destroyed
@@ -56,11 +56,11 @@ resource "aws_s3_bucket_policy" "allow_cloudfront" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid      = "AllowCloudFrontOAC"
-        Effect   = "Allow"
-        Principal = { Service = "cloudfront.amazonaws.com" }                        
-        Action   = "s3:GetObject"
-        Resource = "${aws_s3_bucket.this.arn}/*"
+        Sid       = "AllowCloudFrontOAC"
+        Effect    = "Allow"
+        Principal = { Service = "cloudfront.amazonaws.com" }
+        Action    = "s3:GetObject"
+        Resource  = "${aws_s3_bucket.this.arn}/*"
         Condition = {
           StringEquals = {
             "AWS:SourceArn" = var.cloudfront_distribution_arn
@@ -72,7 +72,7 @@ resource "aws_s3_bucket_policy" "allow_cloudfront" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "server_side_encryption" {
-  count = var.server_side_encryption ? 1 : 0
+  count  = var.server_side_encryption ? 1 : 0
   bucket = aws_s3_bucket.this.bucket
   rule {
     apply_server_side_encryption_by_default {

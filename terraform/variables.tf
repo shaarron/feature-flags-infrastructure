@@ -156,9 +156,3 @@ variable "cf_aliases" {
   default     = []
 
 }
-
-variable "github_private_key" {
-  description = "GitHub private key for accessing private repositories"
-  type        = string
-  sensitive   = true
-}

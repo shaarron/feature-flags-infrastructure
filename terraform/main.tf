@@ -4,7 +4,7 @@ locals {
     data.kubernetes_service.ingress_nginx_controller.status[0].load_balancer[0].ingress[*].hostname
   )
 
-  nlb_name  = split("-", split(".", local.nlb_hostname)[0])[0]
+  nlb_name = split("-", split(".", local.nlb_hostname)[0])[0]
 
 }
 
@@ -24,9 +24,9 @@ data "kubernetes_service" "ingress_nginx_controller" {
 }
 
 module "network" {
-  source      = "../modules/network"
-  name_prefix = local.name_prefix
-  vpc_cidrs   = var.vpc_cidrs
+  source             = "../modules/network"
+  name_prefix        = local.name_prefix
+  vpc_cidrs          = var.vpc_cidrs
   availability_zones = var.availability_zones
 }
 
@@ -144,7 +144,7 @@ module "ebs_csi_storageclass" {
 }
 
 module "s3_frontend" {
-  source = "../modules/s3"
+  source                      = "../modules/s3"
   bucket_name                 = "feature-flags-frontend-${local.name_prefix}-sharon"
   versioning                  = var.versioning
   block_public_access         = var.block_public_access
@@ -223,22 +223,20 @@ resource "helm_release" "argocd" {
   ]
 }
 
-# Create SSH-based Git repo secret for ArgoCD
-resource "kubectl_manifest" "argocd_repo_secret" {
-  yaml_body = <<YAML
-apiVersion: v1
-kind: Secret
-metadata:
-  name: repo-feature-flags
-  namespace: argocd
-  labels:
-    argocd.argoproj.io/secret-type: repository
-stringData:
-  type: git
-  url: git@github.com:shaarron/feature-flags-resources.git
-  sshPrivateKey: |
-    ${replace(var.github_private_key, "\n", "\n    ")}
-YAML
+# # Git repo secret for ArgoCD to access resources repository (public)
+# resource "kubectl_manifest" "argocd_repo_public" {
+#   yaml_body = <<YAML
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: repo-feature-flags-public
+#   namespace: argocd
+#   labels:
+#     argocd.argoproj.io/secret-type: repository
+# stringData:
+#   type: git
+#   url: https://github.com/shaarron/feature-flags-resources.git
+# YAML
 
-  depends_on = [helm_release.argocd]
-}
+#   depends_on = [helm_release.argocd]
+# }

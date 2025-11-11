@@ -9,9 +9,9 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
 }
 
 data "aws_acm_certificate" "cf_cert" {
-  provider          = aws.us_east_1
-  domain            = var.cert_domain_name
-  statuses    = ["ISSUED"]
+  provider = aws.us_east_1
+  domain   = var.cert_domain_name
+  statuses = ["ISSUED"]
 
 }
 
@@ -37,48 +37,48 @@ resource "aws_cloudfront_distribution" "this" {
   dynamic "origin" {
     for_each = var.s3_origin != null ? [var.s3_origin] : []
     content {
-    domain_name              = data.aws_s3_bucket.s3_bucket.bucket_regional_domain_name
-    origin_id                = "s3_origin"
-    origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
- }
-} 
+      domain_name              = data.aws_s3_bucket.s3_bucket.bucket_regional_domain_name
+      origin_id                = "s3_origin"
+      origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
+    }
+  }
 
   # Custom Origin
-  origin {      
+  origin {
     domain_name = var.origin_domain_name
     origin_id   = var.origin_id
 
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = var.origin_protocol_policy 
+      origin_protocol_policy = var.origin_protocol_policy
       origin_ssl_protocols   = toset(var.origin_ssl_protocols)
 
     }
   }
-    
+
   default_cache_behavior {
     allowed_methods        = var.default_cache_behavior.allowed_methods
     cached_methods         = var.default_cache_behavior.cached_methods
     target_origin_id       = var.default_cache_behavior.target_origin_id
-    viewer_protocol_policy = var.default_cache_behavior.viewer_protocol_policy    
-    cache_policy_id          = var.default_cache_behavior.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
+    viewer_protocol_policy = var.default_cache_behavior.viewer_protocol_policy
+    cache_policy_id        = var.default_cache_behavior.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
   }
 
   dynamic "ordered_cache_behavior" {
     for_each = var.ordered_cache_behavior
     content {
-    path_pattern           = ordered_cache_behavior.value.path_pattern
-    allowed_methods        = ordered_cache_behavior.value.allowed_methods
-    cached_methods         = ordered_cache_behavior.value.cached_methods
-    viewer_protocol_policy = ordered_cache_behavior.value.viewer_protocol_policy
-    target_origin_id       = ordered_cache_behavior.value.target_origin_id
-    cache_policy_id          = ordered_cache_behavior.value.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
-    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # all viewer requests headers
+      path_pattern             = ordered_cache_behavior.value.path_pattern
+      allowed_methods          = ordered_cache_behavior.value.allowed_methods
+      cached_methods           = ordered_cache_behavior.value.cached_methods
+      viewer_protocol_policy   = ordered_cache_behavior.value.viewer_protocol_policy
+      target_origin_id         = ordered_cache_behavior.value.target_origin_id
+      cache_policy_id          = ordered_cache_behavior.value.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
+      origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # all viewer requests headers
+
+    }
 
   }
-
-}
   restrictions {
     geo_restriction {
       restriction_type = var.geo_restriction_type
@@ -94,6 +94,6 @@ resource "aws_cloudfront_distribution" "this" {
   default_root_object = var.default_root_object
 
   tags = {
-    Project     = var.name_prefix
+    Project = var.name_prefix
   }
 }

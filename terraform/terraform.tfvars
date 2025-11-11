@@ -1,5 +1,5 @@
 project_name = "feature-flags"
-aws_region = "ap-south-1"
+aws_region   = "ap-south-1"
 
 # S3
 versioning                        = true
@@ -10,7 +10,7 @@ s3_force_destroy                  = true
 origin_access_control_origin_type = "s3"
 
 # network
-vpc_cidrs          = "10.0.0.0/16"
+vpc_cidrs = "10.0.0.0/16"
 
 default_cache_behavior = {
   allowed_methods        = ["GET", "HEAD"]

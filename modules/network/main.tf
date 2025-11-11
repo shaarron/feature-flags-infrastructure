@@ -19,24 +19,24 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
   tags = {
     Name = "${var.name_prefix}-IGW"
-  }  
+  }
 }
 
 resource "aws_eip" "this" {
-  count = local.total
+  count  = local.total
   domain = "vpc"
   tags = {
     Name = "${var.name_prefix}-EIP-${count.index}"
-  }  
+  }
 }
 
 resource "aws_nat_gateway" "this" {
-  count = local.total
-  subnet_id = aws_subnet.public[count.index].id
+  count         = local.total
+  subnet_id     = aws_subnet.public[count.index].id
   allocation_id = aws_eip.this[count.index].id
   tags = {
     Name = "${var.name_prefix}-NAT-GW-${count.index}"
-  }  
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -48,11 +48,11 @@ resource "aws_route_table" "public" {
   }
   tags = {
     Name = "${var.name_prefix}-PUBLIC-RTB"
-  }  
+  }
 }
 
 resource "aws_route_table" "private" {
-  count = local.total
+  count  = local.total
   vpc_id = aws_vpc.this.id
 
   route {
@@ -61,7 +61,7 @@ resource "aws_route_table" "private" {
   }
   tags = {
     Name = "${var.name_prefix}-PRIVATE-RTB-${count.index}"
-  }  
+  }
 }
 
 resource "aws_subnet" "public" {
@@ -72,7 +72,7 @@ resource "aws_subnet" "public" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   tags = {
     Name = "${var.name_prefix}-PUBLIC-SUBNET-${count.index}"
-  }  
+  }
 }
 
 resource "aws_subnet" "private" {
