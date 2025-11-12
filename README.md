@@ -3,12 +3,12 @@
 A collection of Terraform configurations that provision an entire AWS infrastructure for [feature-flags-app]([feature-flags-app](https://github.com/shaarron/feature-flags-app)).
 
 ## Repository layout
-- [modules](#modules) 
-- [terraform](#terraform)
-- [terraform_backend](#terraform_backend)
-- [workspaces](#workspaces)
+- [Modules](#modules) 
+- [Terraform](#terraform)
+- [Terraform Backend](#terraform_backend)
+- [Workspaces](#workspaces)
 
-### [modules](modules)
+### [Modules](modules)
 
 | Module                   | Purpose                                                                                                                                      |
 |--------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -21,7 +21,7 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 
   
 
-### **[terraform](terraform)**
+### **[Terraform](terraform)**
 
 The main Terraform root module. 
 It wires together all the above modules for a complete infrastructure stack.
@@ -33,14 +33,14 @@ It wires together all the above modules for a complete infrastructure stack.
 - `outputs.tf` – Useful outputs like DNS names, ARNs, endpoints.
   
 
-###  **[workspaces](workspaces)**
+###  **[Workspaces](workspaces)**
 
 Environment-specific variable overrides to support **multi-env deployments**.
 
  `dev.tfvars`, `staging.tfvars`, `prod.tfvars`
 
 
-### **[terraform_backend](terraform_backend)**
+### **[Terraform Backend](terraform_backend)**
 
 Provisioning the remote S3 backend for Terraform state.
 - Creates encrypted S3 bucket with versioning.
@@ -131,10 +131,6 @@ terraform init
 ```
 
 ```
-teraform workspace new dev
-```
-
-```
 terraform plan -var-file="../workspaces/dev.tfvars" 
 ```
 ```
@@ -158,9 +154,11 @@ The `terraform.tfvars` or environment-specific `*.tfvars` file is missing requir
 **Fix:**  
 - Double check the variables required in `variables.tf`.
 - Validate your inputs using:
+
   ```bash
   terraform validate
   terraform plan -var-file="workspaces/dev.tfvars"
+   ```
 
 
 ### Error: 403 AccessDenied (across AWS resources)
