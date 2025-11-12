@@ -206,7 +206,6 @@ module "route53" {
   }
 }
 
-## argocd 
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -222,21 +221,3 @@ resource "helm_release" "argocd" {
     helm_release.ingress_nginx
   ]
 }
-
-# # Git repo secret for ArgoCD to access resources repository (public)
-# resource "kubectl_manifest" "argocd_repo_public" {
-#   yaml_body = <<YAML
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: repo-feature-flags-public
-#   namespace: argocd
-#   labels:
-#     argocd.argoproj.io/secret-type: repository
-# stringData:
-#   type: git
-#   url: https://github.com/shaarron/feature-flags-resources.git
-# YAML
-
-#   depends_on = [helm_release.argocd]
-# }

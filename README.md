@@ -1,10 +1,9 @@
-# feature-flags-infrastructure
+# Feature Flags Infrastructure
 
 A collection of Terraform configurations that provision an entire AWS infrastructure for [feature-flags-app]([feature-flags-app](https://github.com/shaarron/feature-flags-app)).
 
 ## Repository layout
-
-- [modules](#modules)
+- [modules](#modules) 
 - [terraform](#terraform)
 - [terraform_backend](#terraform_backend)
 - [workspaces](#workspaces)
@@ -15,16 +14,17 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 |--------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | `cloudfront/`            | Configures a CloudFront distribution with OAC/OAI, custom cache policies, and Route 53 aliases.                                             |
 | `ebs-csi-storageclass/`  | Creates EBS CSI storage classes (e.g., gp3), sets one as default.                                                                            |
-| `network/`               | Builds the VPC, subnets, route tables, IGWs, NAT gateways.                                                                                   |
-| `route53/`               | Manages Route 53 hosted zones and DNS records, often for S3/CloudFront/NLB endpoints.                                                       |
-| `s3/`                    | Manages generic S3 buckets for static hosting, logs, or asset storage, with encryption and access control.                                  |
+| `network/`               | Creates the VPC, subnets, route tables, IGWs, NAT gateways.                                                                                   |
+| `route53/`               |  Creates DNS records for S3/CloudFront/NLB                                                     |
+| `s3/`                    | Creates S3 buckets with encryption and access control.                                  |
 | `oidc/`                  | Sets up IAM OIDC provider for GitHub Actions → AWS role assumption (used for CI/CD with federated access).                                  |
 
   
 
 ### **[terraform](terraform)**
 
-The main Terraform root module. It wires together all the above modules for a complete infrastructure stack.
+The main Terraform root module. 
+It wires together all the above modules for a complete infrastructure stack.
 
 - `main.tf` – Orchestrates all core modules (VPC, EKS, storage, etc.)
 - `providers.tf` – AWS, Kubernetes, Helm provider configurations.
@@ -129,6 +129,11 @@ for each step use the following commands:
 ```
 terraform init
 ```
+
+```
+teraform workspace new dev
+```
+
 ```
 terraform plan -var-file="../workspaces/dev.tfvars" 
 ```
