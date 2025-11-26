@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
+
 data "aws_caller_identity" "current" {}
 
 # Cache policies
@@ -9,14 +18,10 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
 }
 
 data "aws_acm_certificate" "cf_cert" {
-  provider = aws.us_east_1
+  # provider = aws.us_east_1
   domain   = var.cert_domain_name
   statuses = ["ISSUED"]
 
-}
-
-data "aws_s3_bucket" "s3_bucket" {
-  bucket = var.s3_bucket
 }
 
 # Origin Access Control
@@ -37,7 +42,7 @@ resource "aws_cloudfront_distribution" "this" {
   dynamic "origin" {
     for_each = var.s3_origin != null ? [var.s3_origin] : []
     content {
-      domain_name              = data.aws_s3_bucket.s3_bucket.bucket_regional_domain_name
+      domain_name              = var.s3_bucket_domain_name
       origin_id                = "s3_origin"
       origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
     }

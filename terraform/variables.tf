@@ -1,6 +1,5 @@
 variable "availability_zones" {
   type        = number
-  default     = 1
   description = "Amount of availability zones to use for the VPC"
 }
 
@@ -48,11 +47,6 @@ variable "cert_domain_name" {
 
 }
 
-# variable "frontend_s3_bucket_name" {
-#   description = "Name of the S3 bucket for frontend static content"
-#   type        = string
-# }
-
 variable "s3_force_destroy" {
   description = "Force destroy the S3 bucket and its contents"
   type        = bool
@@ -62,13 +56,12 @@ variable "s3_force_destroy" {
 variable "versioning" {
   description = "Enable versioning for the S3 bucket"
   type        = bool
-  default     = true
+
 }
 
 variable "block_public_access" {
   description = "Block public access to the S3 bucket"
   type        = bool
-  default     = true
 
 }
 

@@ -10,7 +10,6 @@ variable "name_prefix" {
 
 variable "availability_zones" {
   type        = number
-  default     = 1
   description = "Amount of availability zones to use for the VPC"
 
 }

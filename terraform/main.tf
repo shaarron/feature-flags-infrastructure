@@ -1,4 +1,7 @@
+data "aws_caller_identity" "current" {}
+
 locals {
+  account_id  = data.aws_caller_identity.current.account_id
   name_prefix = terraform.workspace
   nlb_hostname = one(
     data.kubernetes_service.ingress_nginx_controller.status[0].load_balancer[0].ingress[*].hostname
@@ -12,13 +15,12 @@ locals {
 data "kubernetes_service" "ingress_nginx_controller" {
   metadata {
     name      = "ingress-nginx-controller" # controller svc name
-    namespace = "default"
+    namespace = "ingress-nginx"
   }
 
   provider = kubernetes.eks
   depends_on = [
-    module.eks,                # ensures cluster exists
-    helm_release.ingress_nginx # ensures service exists
+    time_sleep.wait_3_minutes
   ]
 
 }
@@ -103,24 +105,6 @@ provider "kubectl" {
   token                  = data.aws_eks_cluster_auth.this.token
 }
 
-resource "helm_release" "ingress_nginx" {
-  name       = "ingress-nginx"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
-
-  values = [
-    yamlencode({
-      controller = {
-        service = {
-          type = "LoadBalancer"
-        }
-      }
-    })
-  ]
-  depends_on = [module.eks]
-
-}
-
 module "ebs_csi_irsa_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
@@ -143,6 +127,37 @@ module "ebs_csi_storageclass" {
   token                  = data.aws_eks_cluster_auth.this.token
 }
 
+
+resource "helm_release" "argocd" {
+  name       = "argocd"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd"
+  namespace  = "argocd"
+
+  create_namespace = true
+  version          = "8.1.3"
+
+  depends_on = [
+    module.eks,
+    module.eks_blueprints_addons,
+  ]
+}
+
+resource "kubectl_manifest" "argocd_root_app" {
+  yaml_body = file("root-app.yaml")
+
+  depends_on = [
+    helm_release.argocd
+  ]
+}
+
+
+
+resource "time_sleep" "wait_3_minutes" {
+  depends_on      = [kubectl_manifest.argocd_root_app]
+  create_duration = "3m"
+}
+
 module "s3_frontend" {
   source                      = "../modules/s3"
   bucket_name                 = "feature-flags-frontend-${local.name_prefix}-sharon"
@@ -150,11 +165,16 @@ module "s3_frontend" {
   block_public_access         = var.block_public_access
   force_ssl_policy            = var.force_ssl_policy
   server_side_encryption      = var.server_side_encryption
-  cloudfront_distribution_arn = module.cloudfront.cloudfront_distribution_id
+  cloudfront_distribution_arn = module.cloudfront.cloudfront_distribution_arn
+
 }
 
-
 module "cloudfront" {
+
+  providers = {
+    aws = aws.us_east_1
+  }
+
   source      = "../modules/cloudfront"
   aws_region  = var.aws_region
   name_prefix = local.name_prefix
@@ -165,23 +185,28 @@ module "cloudfront" {
   origin_protocol_policy = "http-only"
   origin_ssl_protocols   = ["TLSv1.2"]
 
-
   ordered_cache_behavior = var.ordered_cache_behavior
 
   s3_origin                         = module.s3_frontend.s3_bucket
   s3_bucket                         = module.s3_frontend.s3_bucket
+  s3_bucket_domain_name             = module.s3_frontend.bucket_regional_domain_name
   default_cache_behavior            = var.default_cache_behavior
   geo_restriction_type              = var.geo_restriction_type
   origin_access_control_origin_type = var.origin_access_control_origin_type
   cert_domain_name                  = var.cert_domain_name
+
+  depends_on = [
+    module.cert_manager
+  ]
 }
 
 module "route53" {
   source = "../modules/route53"
 
   depends_on = [
-    module.eks,
-    helm_release.ingress_nginx
+    kubectl_manifest.argocd_root_app,
+    local.nlb_hostname,
+    module.cert_manager
   ]
 
   providers = {
@@ -206,18 +231,68 @@ module "route53" {
   }
 }
 
-resource "helm_release" "argocd" {
-  name       = "argocd"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd"
-  namespace  = "argocd"
+module "external_secrets_iam" {
+  source = "../modules/external-secrets-iam"
 
-  create_namespace = true
-  version          = "8.1.3"
+  account_id = local.account_id
+  region     = var.aws_region
+
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider     = module.eks.oidc_provider
+}
+
+resource "kubernetes_namespace" "external_secrets" {
+  metadata {
+    name = "external-secrets"
+  }
+
+  depends_on = [module.eks]
+}
+
+resource "kubernetes_service_account" "external_secrets" {
+  metadata {
+    name      = "external-secrets-sa"
+    namespace = kubernetes_namespace.external_secrets.metadata[0].name
+
+    annotations = {
+      "eks.amazonaws.com/role-arn" = module.external_secrets_iam.role_arn
+    }
+
+    labels = {
+      "app.kubernetes.io/name" = "external-secrets"
+    }
+  }
+
+  automount_service_account_token = true
+}
+module "cert_manager" {
+  source            = "../modules/cert-manager"
+  domain_name       = var.web_app_domain_name
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_url = module.eks.cluster_oidc_issuer_url
 
   depends_on = [
-    module.eks,
-    module.eks_blueprints_addons,
-    helm_release.ingress_nginx
+    module.eks
   ]
+}
+
+resource "kubernetes_namespace" "cert_manager" {
+  metadata {
+    name = "cert-manager"
+  }
+  depends_on = [module.eks]
+}
+
+resource "kubernetes_service_account" "cert_manager" {
+  metadata {
+    name      = "cert-manager"
+    namespace = kubernetes_namespace.cert_manager.metadata[0].name
+    annotations = {
+      "eks.amazonaws.com/role-arn" = module.cert_manager.role_arn 
+    }
+    labels = {
+      "app.kubernetes.io/name" = "cert-manager"
+    }
+  }
+  automount_service_account_token = true
 }

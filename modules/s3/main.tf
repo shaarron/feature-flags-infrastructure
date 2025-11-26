@@ -23,51 +23,45 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
   restrict_public_buckets = var.block_public_access
 }
 
-resource "aws_s3_bucket_policy" "force_ssl_policy" {
-  count  = var.force_ssl_policy ? 1 : 0
+resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.this.id
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Deny"
-        Principal = "*"
-        Action    = "s3:*"
-        Resource = [
-          aws_s3_bucket.this.arn,
-          "${aws_s3_bucket.this.arn}/*"
-        ]
-        Condition = {
-          Bool = {
-            "aws:SecureTransport" = "false"
+    Statement = concat(
+      # Force SSL policy statement (only if enabled)
+      var.force_ssl_policy ? [
+        {
+          Effect    = "Deny"
+          Principal = "*"
+          Action    = "s3:*"
+          Resource = [
+            aws_s3_bucket.this.arn,
+            "${aws_s3_bucket.this.arn}/*"
+          ]
+          Condition = {
+            Bool = {
+              "aws:SecureTransport" = "false"
+            }
           }
         }
-      }
-    ]
-  })
-}
-
-# S3 Bucket Policy to allow CloudFront access
-resource "aws_s3_bucket_policy" "allow_cloudfront" {
-  bucket = aws_s3_bucket.this.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid       = "AllowCloudFrontOAC"
-        Effect    = "Allow"
-        Principal = { Service = "cloudfront.amazonaws.com" }
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.this.arn}/*"
-        Condition = {
-          StringEquals = {
-            "AWS:SourceArn" = var.cloudfront_distribution_arn
+      ] : [],
+      # CloudFront access policy statement (only if distribution ARN is provided)
+      var.cloudfront_distribution_arn != "" ? [
+        {
+          Sid       = "AllowCloudFrontOAC"
+          Effect    = "Allow"
+          Principal = { Service = "cloudfront.amazonaws.com" }
+          Action    = "s3:GetObject"
+          Resource  = "${aws_s3_bucket.this.arn}/*"
+          Condition = {
+            StringEquals = {
+              "AWS:SourceArn" = var.cloudfront_distribution_arn
+            }
           }
         }
-      }
-    ]
+      ] : []
+    )
   })
 }
 
