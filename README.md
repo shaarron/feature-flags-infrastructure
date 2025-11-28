@@ -3,23 +3,36 @@
 A collection of Terraform configurations that provision an entire AWS infrastructure for [feature-flags-app]([feature-flags-app](https://github.com/shaarron/feature-flags-app)).
 
 ## Repository layout
-- [Modules](#modules) 
-- [Terraform](#terraform)
-- [Terraform Backend](#terraform_backend)
-- [Workspaces](#workspaces)
+
+
+## Table of contents 
+
+- [**Modules**](#modules) 
+- [**Terraform**](#terraform)
+- [**Workspaces**](#workspaces)
+- [**Terraform Backend**](#terraform_backend)
+- [**OIDC**](#oidc)
+- [**Getting started**](#getting-started)
+- [**Getting started using Github Actions workflow**](#getting-started-using-github-actions-workflow)
+
+- [**Prerequisites**](#prerequisites)
+
+
 
 ### [Modules](modules)
+
+These modules are composed by the main application stack in `terraform/`.
 
 | Module                   | Purpose                                                                                                                                      |
 |--------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | `cloudfront/`            | Configures a CloudFront distribution with OAC/OAI, custom cache policies, and Route 53 aliases.                                             |
 | `ebs-csi-storageclass/`  | Creates EBS CSI storage classes (e.g., gp3), sets one as default.                                                                            |
 | `network/`               | Creates the VPC, subnets, route tables, IGWs, NAT gateways.                                                                                   |
-| `route53/`               |  Creates DNS records for S3/CloudFront/NLB                                                     |
-| `s3/`                    | Creates S3 buckets with encryption and access control.                                  |
-| `oidc/`                  | Sets up IAM OIDC provider for GitHub Actions → AWS role assumption (used for CI/CD with federated access).                                  |
+| `route53/`               | Creates DNS records for S3/CloudFront/NLB.                                                                                                   |
+| `s3/`                    | Creates S3 buckets with encryption and access control.                                                                                       |
+| `cert-manager/`          | Configures IAM roles (IRSA) for cert-manager to manage Route53 DNS records for DNS-01 challenges.                                            |
+| `external-secrets-iam/`  | Configures IAM permissions for External Secrets Operator to read from AWS Secrets Manager.                                                   |
 
-  
 
 ### **[Terraform](terraform)**
 
@@ -40,6 +53,12 @@ Environment-specific variable overrides to support **multi-env deployments**.
  `dev.tfvars`, `staging.tfvars`, `prod.tfvars`
 
 
+### **[OIDC](oidc)**
+
+A standalone configuration located in `oidc/`. 
+- **Purpose:** Sets up the IAM OIDC provider to allow GitHub Actions to assume AWS roles.
+- **Usage:** This must be applied separately **before** running the main pipeline if you intend to use GitHub Actions.
+
 ### **[Terraform Backend](terraform_backend)**
 
 Provisioning the remote S3 backend for Terraform state.
@@ -47,12 +66,15 @@ Provisioning the remote S3 backend for Terraform state.
 - Applies secure public access blocking and bucket policies.
   
 
-
 ## Prerequisites
 
 - Terraform (>= 1.0 recommended)
 - AWS CLI configured with appropriate credentials and region
+- **Route 53 Hosted Zone:** A public hosted zone for your domain (e.g., `your-domain.com`) must already exist in the AWS account.
+- **ACM Certificate:** A valid SSL/TLS certificate for your domain (or wildcard, e.g., `*.your-domain.com`) must exist in the **us-east-1** (N. Virginia) region.
+  > **Note:** CloudFront requires certificates to be in `us-east-1`, even if your main infrastructure is in other region (e.g, ap-south-1).
 - Prepare terraform.tfvars for each module with the required variables.
+
 
 ## Required AWS Permissions & IAM Roles
 
@@ -113,12 +135,25 @@ terraform apply
 
 #### To configure backend
 
- Update the backend configuration with your backend s3 bucket info, in the following path:   
-  [terraform/providers.tf:14-20](terraform/providers.tf)
-    
-   <img src="backend_config.png" width="30%">
+1. Update Configuration File: Edit `terraform/backend.hcl` with your bucket name and region:
 
+   ```
+   bucket = "your-backend-bucket-name"
+   region = "ap-south-1"
+   ```
+2. Enable Backend in Terraform: In t`erraform/providers.tf`, uncomment the backend block so Terraform knows to use S3:
+   ```
+   # backend "s3" {}
+   ```
 
+3. Initialize with Backend Config
+When initializing Terraform, you must now tell it to use your `backend.hcl` file and specify a key (path) for the state file.
+
+   ```
+   cd terraform/
+
+   terraform init -backend-config="backend.hcl" -backend-config="key=workspaces/dev/terraform.tfstate"
+   ```
 #### 3. Deploy the whole setup
 
 once you done configuring remote backend, cd into **terraform/** and run the **[terraform commands](#terraform-commands)** based on your env.
