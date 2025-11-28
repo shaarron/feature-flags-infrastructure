@@ -23,7 +23,6 @@ provider "aws" {
   }
 }
 
-
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
@@ -35,4 +34,23 @@ provider "helm" {
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
+}
+
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "kubernetes" {
+  alias                  = "eks"
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "kubectl" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
 }

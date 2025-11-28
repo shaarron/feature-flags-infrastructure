@@ -71,15 +71,6 @@ variable "ordered_cache_behavior" {
   }))
   default = []
 }
-# might be a zombie variable - test and remove later
-# variable "viewer_protocol_policy" {
-#   description = "Viewer protocol policy for the CloudFront distribution"
-#   type        = string
-#   validation {
-#     condition     = contains(["allow-all", "https-only", "redirect-to-https"], var.viewer_protocol_policy)
-#     error_message = "Viewer protocol policy must be one of: allow-all, https-only, redirect-to-https."
-#   }
-# }
 
 variable "geo_restriction_type" {
   description = "Type of geo restriction for CloudFront distribution"

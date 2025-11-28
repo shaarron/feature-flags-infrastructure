@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_eip" "this" {
-  count  = local.total
+  count  = var.single_nat_gateway ? 1 : local.total
   domain = "vpc"
   tags = {
     Name = "${var.name_prefix}-EIP-${count.index}"
@@ -31,9 +31,9 @@ resource "aws_eip" "this" {
 }
 
 resource "aws_nat_gateway" "this" {
-  count         = local.total
-  subnet_id     = aws_subnet.public[count.index].id
-  allocation_id = aws_eip.this[count.index].id
+  count         = var.single_nat_gateway ? 1 : local.total
+  subnet_id     = aws_subnet.public[var.single_nat_gateway ? 0 : count.index].id
+  allocation_id = aws_eip.this[var.single_nat_gateway ? 0 : count.index].id
   tags = {
     Name = "${var.name_prefix}-NAT-GW-${count.index}"
   }
@@ -57,7 +57,7 @@ resource "aws_route_table" "private" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.this[count.index].id
+    nat_gateway_id = aws_nat_gateway.this[var.single_nat_gateway ? 0 : count.index].id
   }
   tags = {
     Name = "${var.name_prefix}-PRIVATE-RTB-${count.index}"

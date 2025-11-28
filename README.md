@@ -7,6 +7,7 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 - [Terraform](#terraform)
 - [Terraform Backend](#terraform_backend)
 - [Workspaces](#workspaces)
+- [](#)
 
 ### [Modules](modules)
 
@@ -76,6 +77,11 @@ To successfully apply this Terraform configuration, the IAM user or role running
 
 - **CloudWatch Logs**
 
+## Getting started using Github Actions workflow
+
+### [Feature Flags Infrastructure](.github/workflows/feature-flags-infrastructure.yaml)
+
+This workflow validates, plans and apply the terraform files based on the user  provision AWS infrastructure resources.
 
 ## Getting started
 

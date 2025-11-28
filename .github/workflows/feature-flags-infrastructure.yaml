@@ -1,0 +1,54 @@
+name: Feature Flags Infrastructure – Terraform
+
+on: 
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Terraform environment (workspace)"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # for OIDC
+    defaults:
+      run:
+        working-directory: terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+          
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::869432184848:role/gha-oidc-deploy
+          aws-region: ap-south-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      
+      - name: Terraform Init
+        run: terraform init -backend-config="backend.hcl" -backend-config="key=state/${{ github.event.inputs.env }}/terraform.tfstate"
+
+      - name: Terraform Workspace Select
+        run: terraform workspace select ${{ github.event.inputs.env }} || terraform workspace new ${{ github.event.inputs.env }}
+
+      - name: Terraform Format
+        run: terraform fmt -check
+            
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -var-file="../workspaces/${{ github.event.inputs.env }}.tfvars"
+
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve -var-file="../workspaces/${{ github.event.inputs.env }}.tfvars"
+

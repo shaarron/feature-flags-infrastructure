@@ -13,3 +13,9 @@ variable "availability_zones" {
   description = "Amount of availability zones to use for the VPC"
 
 }
+
+variable "single_nat_gateway" {
+  description = "Provision a single NAT Gateway"
+  type        = bool
+  default     = false
+}

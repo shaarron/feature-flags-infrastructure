@@ -18,7 +18,6 @@ data "kubernetes_service" "ingress_nginx_controller" {
     namespace = "ingress-nginx"
   }
 
-  provider = kubernetes.eks
   depends_on = [
     time_sleep.wait_3_minutes
   ]
@@ -30,6 +29,7 @@ module "network" {
   name_prefix        = local.name_prefix
   vpc_cidrs          = var.vpc_cidrs
   availability_zones = var.availability_zones
+  single_nat_gateway = var.single_nat_gateway
 }
 
 module "eks" {
@@ -86,25 +86,6 @@ module "eks_blueprints_addons" {
   }
 }
 
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "kubernetes" {
-  alias                  = "eks"
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "kubectl" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
 module "ebs_csi_irsa_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
@@ -126,7 +107,6 @@ module "ebs_csi_storageclass" {
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
   token                  = data.aws_eks_cluster_auth.this.token
 }
-
 
 resource "helm_release" "argocd" {
   name       = "argocd"
@@ -150,8 +130,6 @@ resource "kubectl_manifest" "argocd_root_app" {
     helm_release.argocd
   ]
 }
-
-
 
 resource "time_sleep" "wait_3_minutes" {
   depends_on      = [kubectl_manifest.argocd_root_app]
@@ -209,10 +187,6 @@ module "route53" {
     module.cert_manager
   ]
 
-  providers = {
-    kubernetes = kubernetes.eks
-  }
-
   aws_region  = var.aws_region
   domain_name = var.web_app_domain_name
   sub_domains = {
@@ -264,6 +238,7 @@ resource "kubernetes_service_account" "external_secrets" {
   }
 
   automount_service_account_token = true
+  depends_on                      = [module.external_secrets_iam, kubernetes_namespace.external_secrets]
 }
 module "cert_manager" {
   source            = "../modules/cert-manager"
@@ -288,7 +263,7 @@ resource "kubernetes_service_account" "cert_manager" {
     name      = "cert-manager"
     namespace = kubernetes_namespace.cert_manager.metadata[0].name
     annotations = {
-      "eks.amazonaws.com/role-arn" = module.cert_manager.role_arn 
+      "eks.amazonaws.com/role-arn" = module.cert_manager.role_arn
     }
     labels = {
       "app.kubernetes.io/name" = "cert-manager"
