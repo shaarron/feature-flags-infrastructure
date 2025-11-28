@@ -7,7 +7,6 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 - [Terraform](#terraform)
 - [Terraform Backend](#terraform_backend)
 - [Workspaces](#workspaces)
-- [](#)
 
 ### [Modules](modules)
 
