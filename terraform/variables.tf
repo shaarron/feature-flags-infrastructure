@@ -1,14 +1,4 @@
-variable "availability_zones" {
-  type        = number
-  default     = 1
-  description = "Amount of availability zones to use for the VPC"
-}
-
-variable "vpc_cidrs" {
-  description = "vpc cidrs"
-  type        = string
-}
-
+#### Shared variables across modules
 variable "common_tags" {
   default = {
     owner     = "terraform-eks"
@@ -17,12 +7,10 @@ variable "common_tags" {
   }
 }
 
-variable "cluster_version" {
-  type = string
-}
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
 
-variable "node_type" {
-  type = string
 }
 
 variable "aws_region" {
@@ -31,10 +19,30 @@ variable "aws_region" {
 }
 
 
-variable "project_name" {
-  description = "Name of the project"
-  type        = string
+#### Network module variables
+variable "availability_zones" {
+  type        = number
+  description = "Amount of availability zones to use for the VPC"
+}
 
+variable "single_nat_gateway" {
+  description = "Provision a single NAT Gateway"
+  type        = bool
+  default     = false
+}
+
+variable "vpc_cidrs" {
+  description = "vpc cidrs"
+  type        = string
+}
+
+#### EKS module variables
+variable "cluster_version" {
+  type = string
+}
+
+variable "node_type" {
+  type = string
 }
 
 variable "web_app_domain_name" {
@@ -48,11 +56,7 @@ variable "cert_domain_name" {
 
 }
 
-# variable "frontend_s3_bucket_name" {
-#   description = "Name of the S3 bucket for frontend static content"
-#   type        = string
-# }
-
+#### S3 module variables
 variable "s3_force_destroy" {
   description = "Force destroy the S3 bucket and its contents"
   type        = bool
@@ -62,13 +66,12 @@ variable "s3_force_destroy" {
 variable "versioning" {
   description = "Enable versioning for the S3 bucket"
   type        = bool
-  default     = true
+
 }
 
 variable "block_public_access" {
   description = "Block public access to the S3 bucket"
   type        = bool
-  default     = true
 
 }
 
@@ -82,6 +85,7 @@ variable "server_side_encryption" {
   type        = bool
 }
 
+#### CloudFront module variables
 variable "origin_access_control_origin_type" {
   description = "Origin access control origin type (e.g., s3)"
   type        = string

@@ -23,6 +23,11 @@ variable "s3_bucket" {
   type        = any
 }
 
+variable "s3_bucket_domain_name" {
+  description = ""
+  type        = any
+}
+
 variable "origin_domain_name" {
   type    = string
   default = ""
@@ -36,13 +41,11 @@ variable "origin_id" {
 variable "origin_protocol_policy" {
   description = "Protocol policy for the custom origin"
   type        = string
-  default     = "https-only"
 }
 
 variable "origin_ssl_protocols" {
   description = "SSL protocols for the custom origin"
   type        = list(string)
-  default     = ["TLSv1.2"]
 }
 
 variable "default_cache_behavior" {
@@ -67,16 +70,6 @@ variable "ordered_cache_behavior" {
     cache_policy_optimized = bool # use the optimized cache policy (true) or caching disabled (false).
   }))
   default = []
-}
-
-variable "viewer_protocol_policy" {
-  description = "Viewer protocol policy for the CloudFront distribution"
-  type        = string
-  default     = "redirect-to-https"
-  validation {
-    condition     = contains(["allow-all", "https-only", "redirect-to-https"], var.viewer_protocol_policy)
-    error_message = "Viewer protocol policy must be one of: allow-all, https-only, redirect-to-https."
-  }
 }
 
 variable "geo_restriction_type" {

@@ -1,12 +1,13 @@
 
 # Domain
 web_app_domain_name = "its-sharon.com"
-cert_domain_name = "*.its-sharon.com"
+cert_domain_name    = "*.its-sharon.com"
 
 # Network
-availability_zones                 = 3
+availability_zones = 3
+single_nat_gateway = false
 
 # EKS
-cluster_version    = "1.31"
-node_type          = "r6a.large"
+cluster_version = "1.31"
+node_type       = "t3.large"
 

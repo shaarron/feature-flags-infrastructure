@@ -6,7 +6,7 @@ versioning                        = true
 block_public_access               = true
 force_ssl_policy                  = true
 server_side_encryption            = true
-s3_force_destroy                  = true
+s3_force_destroy                  = false
 origin_access_control_origin_type = "s3"
 
 # network

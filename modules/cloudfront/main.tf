@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 data "aws_caller_identity" "current" {}
 
 # Cache policies
@@ -9,14 +17,10 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
 }
 
 data "aws_acm_certificate" "cf_cert" {
-  provider = aws.us_east_1
+  # provider = aws.us_east_1
   domain   = var.cert_domain_name
   statuses = ["ISSUED"]
 
-}
-
-data "aws_s3_bucket" "s3_bucket" {
-  bucket = var.s3_bucket
 }
 
 # Origin Access Control
@@ -37,7 +41,7 @@ resource "aws_cloudfront_distribution" "this" {
   dynamic "origin" {
     for_each = var.s3_origin != null ? [var.s3_origin] : []
     content {
-      domain_name              = data.aws_s3_bucket.s3_bucket.bucket_regional_domain_name
+      domain_name              = var.s3_bucket_domain_name
       origin_id                = "s3_origin"
       origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
     }
@@ -62,7 +66,13 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods         = var.default_cache_behavior.cached_methods
     target_origin_id       = var.default_cache_behavior.target_origin_id
     viewer_protocol_policy = var.default_cache_behavior.viewer_protocol_policy
-    cache_policy_id        = var.default_cache_behavior.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
+
+    cache_policy_id = var.default_cache_behavior.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
+    origin_request_policy_id = var.default_cache_behavior.cache_policy_optimized ? null : "216adef6-5c7f-47e4-b989-5492eafa07d3"
+    min_ttl     = null
+    default_ttl = null
+    max_ttl     = null
+
   }
 
   dynamic "ordered_cache_behavior" {
@@ -73,8 +83,12 @@ resource "aws_cloudfront_distribution" "this" {
       cached_methods           = ordered_cache_behavior.value.cached_methods
       viewer_protocol_policy   = ordered_cache_behavior.value.viewer_protocol_policy
       target_origin_id         = ordered_cache_behavior.value.target_origin_id
-      cache_policy_id          = ordered_cache_behavior.value.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
-      origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # all viewer requests headers
+
+      cache_policy_id = ordered_cache_behavior.value.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
+      origin_request_policy_id = ordered_cache_behavior.value.cache_policy_optimized ? null : "216adef6-5c7f-47e4-b989-5492eafa07d3"
+      min_ttl     = null
+      default_ttl = null
+      max_ttl     = null
 
     }
 

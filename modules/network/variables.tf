@@ -10,7 +10,12 @@ variable "name_prefix" {
 
 variable "availability_zones" {
   type        = number
-  default     = 1
   description = "Amount of availability zones to use for the VPC"
 
+}
+
+variable "single_nat_gateway" {
+  description = "Provision a single NAT Gateway"
+  type        = bool
+  default     = false
 }
