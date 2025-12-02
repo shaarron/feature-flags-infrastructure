@@ -10,7 +10,7 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 - [**Modules**](#modules) 
 - [**Terraform**](#terraform)
 - [**Workspaces**](#workspaces)
-- [**Terraform Backend**](#terraform_backend)
+- [**Terraform Backend**](#terraform-backend)
 - [**OIDC**](#oidc)
 - [**Getting started**](#getting-started)
 - [**Getting started using Github Actions workflow**](#getting-started-using-github-actions-workflow)
@@ -109,7 +109,7 @@ This workflow validates, plans and apply the terraform files based on the user  
 ### 1. Configure Workspace 
 Create workspace based on the required env(prod, dev, staging):
 
-(*e.g using dev environment) 
+(e.g., using dev environment) 
 ```
 terraform workspace new dev
 ```
