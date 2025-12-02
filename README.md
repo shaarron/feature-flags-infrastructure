@@ -1,9 +1,6 @@
 # Feature Flags Infrastructure
 
-A collection of Terraform configurations that provision an entire AWS infrastructure for [feature-flags-app]([feature-flags-app](https://github.com/shaarron/feature-flags-app)).
-
-## Repository layout
-
+A collection of Terraform configurations that provision an entire AWS infrastructure for [**feature-flags-app**]([feature-flags-app](https://github.com/shaarron/feature-flags-app)).
 
 ## Table of contents 
 
