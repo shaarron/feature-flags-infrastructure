@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/shaarron/feature-flags-resources.git
     targetRevision: main
-    path: argocd/applications
+    path: argocd/environments/${env_name}
     directory:
       recurse: true
     

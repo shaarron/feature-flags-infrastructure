@@ -124,7 +124,9 @@ resource "helm_release" "argocd" {
 }
 
 resource "kubectl_manifest" "argocd_root_app" {
-  yaml_body = file("root-app.yaml")
+  yaml_body = templatefile("root-app.yaml.tpl", {
+    env_name = terraform.workspace
+  })
 
   depends_on = [
     helm_release.argocd

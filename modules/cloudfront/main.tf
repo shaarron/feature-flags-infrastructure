@@ -17,7 +17,6 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
 }
 
 data "aws_acm_certificate" "cf_cert" {
-  # provider = aws.us_east_1
   domain   = var.cert_domain_name
   statuses = ["ISSUED"]
 

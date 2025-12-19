@@ -1,7 +1,7 @@
 #### Shared variables across modules
 variable "common_tags" {
   default = {
-    owner     = "terraform-eks"
+    owner     = "SharonK"
     managedBy = "terraform"
     app_name  = "feature-flags"
   }
