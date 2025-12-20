@@ -45,6 +45,12 @@ variable "node_type" {
   type = string
 }
 
+variable "kms_key_arn" {
+  description = "The kms key arn for the eks cluster"
+  type        = string
+}
+
+#### domain variables
 variable "web_app_domain_name" {
   description = "Domain name for the web application"
   type        = string
@@ -56,7 +62,7 @@ variable "cert_domain_name" {
 
 }
 
-#### S3 module variables
+# S3 module variables
 variable "s3_force_destroy" {
   description = "Force destroy the S3 bucket and its contents"
   type        = bool
@@ -159,4 +165,10 @@ variable "cf_aliases" {
   type        = list(string)
   default     = []
 
+}
+
+variable "dns_ready" {
+  type        = bool
+  default     = false
+  description = "Set to true only after the EKS cluster and Ingress are live"
 }

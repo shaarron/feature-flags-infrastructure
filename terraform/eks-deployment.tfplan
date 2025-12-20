@@ -1,0 +1,1774 @@
+[0m[1mmodule.ebs_csi_irsa_role.data.aws_partition.current: Reading...[0m[0m
+[0m[1mmodule.eks.data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.ebs_csi_irsa_role.data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_region.current: Reading...[0m[0m
+[0m[1mdata.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.network.data.aws_availability_zones.available: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.ebs_csi_irsa_role.data.aws_partition.current: Read complete after 0s [id=aws][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_region.current: Read complete after 0s [id=ap-south-1][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_partition.current: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_partition.current: Read complete after 0s [id=aws][0m
+[0m[1mmodule.ebs_csi_irsa_role.data.aws_iam_policy_document.ebs_csi[0]: Reading...[0m[0m
+[0m[1mmodule.ebs_csi_irsa_role.data.aws_iam_policy_document.ebs_csi[0]: Read complete after 0s [id=3487957436][0m
+[0m[1mdata.aws_caller_identity.current: Read complete after 0s [id=869432184848][0m
+[0m[1mmodule.eks.data.aws_caller_identity.current: Read complete after 0s [id=869432184848][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_caller_identity.current: Read complete after 1s [id=869432184848][0m
+[0m[1mmodule.ebs_csi_irsa_role.data.aws_caller_identity.current: Read complete after 1s [id=869432184848][0m
+[0m[1mmodule.network.data.aws_availability_zones.available: Read complete after 1s [id=ap-south-1][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["vpc-cni"]: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["aws-ebs-csi-driver"]: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["kube-proxy"]: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["coredns"]: Reading...[0m[0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["vpc-cni"]: Read complete after 1s [id=vpc-cni][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["kube-proxy"]: Read complete after 1s [id=kube-proxy][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["aws-ebs-csi-driver"]: Read complete after 1s [id=aws-ebs-csi-driver][0m
+[0m[1mmodule.eks_blueprints_addons.data.aws_eks_addon_version.this["coredns"]: Read complete after 1s [id=coredns][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+ [36m<=[0m read (data resources)[0m
+
+Terraform will perform the following actions:
+
+[1m  # data.aws_eks_cluster_auth.this[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_eks_cluster_auth" "this" {
+      [32m+[0m[0m id    = (known after apply)
+      [32m+[0m[0m name  = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m token = (sensitive value)
+    }
+
+[1m  # data.aws_lb.ingress_nlb[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_lb" "ingress_nlb" {
+      [32m+[0m[0m access_logs                                                  = (known after apply)
+      [32m+[0m[0m arn                                                          = (known after apply)
+      [32m+[0m[0m arn_suffix                                                   = (known after apply)
+      [32m+[0m[0m client_keep_alive                                            = (known after apply)
+      [32m+[0m[0m connection_logs                                              = (known after apply)
+      [32m+[0m[0m customer_owned_ipv4_pool                                     = (known after apply)
+      [32m+[0m[0m desync_mitigation_mode                                       = (known after apply)
+      [32m+[0m[0m dns_name                                                     = (known after apply)
+      [32m+[0m[0m dns_record_client_routing_policy                             = (known after apply)
+      [32m+[0m[0m drop_invalid_header_fields                                   = (known after apply)
+      [32m+[0m[0m enable_cross_zone_load_balancing                             = (known after apply)
+      [32m+[0m[0m enable_deletion_protection                                   = (known after apply)
+      [32m+[0m[0m enable_http2                                                 = (known after apply)
+      [32m+[0m[0m enable_tls_version_and_cipher_suite_headers                  = (known after apply)
+      [32m+[0m[0m enable_waf_fail_open                                         = (known after apply)
+      [32m+[0m[0m enable_xff_client_port                                       = (known after apply)
+      [32m+[0m[0m enable_zonal_shift                                           = (known after apply)
+      [32m+[0m[0m enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      [32m+[0m[0m id                                                           = (known after apply)
+      [32m+[0m[0m idle_timeout                                                 = (known after apply)
+      [32m+[0m[0m internal                                                     = (known after apply)
+      [32m+[0m[0m ip_address_type                                              = (known after apply)
+      [32m+[0m[0m ipam_pools                                                   = (known after apply)
+      [32m+[0m[0m load_balancer_type                                           = (known after apply)
+      [32m+[0m[0m name                                                         = (known after apply)
+      [32m+[0m[0m preserve_host_header                                         = (known after apply)
+      [32m+[0m[0m security_groups                                              = (known after apply)
+      [32m+[0m[0m subnet_mapping                                               = (known after apply)
+      [32m+[0m[0m subnets                                                      = (known after apply)
+      [32m+[0m[0m tags                                                         = (known after apply)
+      [32m+[0m[0m vpc_id                                                       = (known after apply)
+      [32m+[0m[0m xff_header_processing_mode                                   = (known after apply)
+      [32m+[0m[0m zone_id                                                      = (known after apply)
+    }
+
+[1m  # data.kubernetes_service.ingress_nginx_controller[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "kubernetes_service" "ingress_nginx_controller" {
+      [32m+[0m[0m id     = (known after apply)
+      [32m+[0m[0m spec   = (known after apply)
+      [32m+[0m[0m status = (known after apply)
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m name             = "ingress-nginx-controller"
+          [32m+[0m[0m namespace        = "ingress-nginx"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1m  # helm_release.argocd[0m will be created
+[0m  [32m+[0m[0m resource "helm_release" "argocd" {
+      [32m+[0m[0m atomic                     = false
+      [32m+[0m[0m chart                      = "argo-cd"
+      [32m+[0m[0m cleanup_on_fail            = false
+      [32m+[0m[0m create_namespace           = true
+      [32m+[0m[0m dependency_update          = false
+      [32m+[0m[0m disable_crd_hooks          = false
+      [32m+[0m[0m disable_openapi_validation = false
+      [32m+[0m[0m disable_webhooks           = false
+      [32m+[0m[0m force_update               = false
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m lint                       = false
+      [32m+[0m[0m manifest                   = (known after apply)
+      [32m+[0m[0m max_history                = 0
+      [32m+[0m[0m metadata                   = (known after apply)
+      [32m+[0m[0m name                       = "argocd"
+      [32m+[0m[0m namespace                  = "argocd"
+      [32m+[0m[0m pass_credentials           = false
+      [32m+[0m[0m recreate_pods              = false
+      [32m+[0m[0m render_subchart_notes      = true
+      [32m+[0m[0m replace                    = false
+      [32m+[0m[0m repository                 = "https://argoproj.github.io/argo-helm"
+      [32m+[0m[0m reset_values               = false
+      [32m+[0m[0m reuse_values               = false
+      [32m+[0m[0m skip_crds                  = false
+      [32m+[0m[0m status                     = "deployed"
+      [32m+[0m[0m timeout                    = 300
+      [32m+[0m[0m verify                     = false
+      [32m+[0m[0m version                    = "8.1.3"
+      [32m+[0m[0m wait                       = true
+      [32m+[0m[0m wait_for_jobs              = false
+    }
+
+[1m  # kubectl_manifest.argocd_root_app[0m will be created
+[0m  [32m+[0m[0m resource "kubectl_manifest" "argocd_root_app" {
+      [32m+[0m[0m api_version             = "argoproj.io/v1alpha1"
+      [32m+[0m[0m apply_only              = false
+      [32m+[0m[0m force_conflicts         = false
+      [32m+[0m[0m force_new               = false
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m kind                    = "Application"
+      [32m+[0m[0m live_manifest_incluster = (sensitive value)
+      [32m+[0m[0m live_uid                = (known after apply)
+      [32m+[0m[0m name                    = "root-app"
+      [32m+[0m[0m namespace               = "argocd"
+      [32m+[0m[0m server_side_apply       = false
+      [32m+[0m[0m uid                     = (known after apply)
+      [32m+[0m[0m validate_schema         = true
+      [32m+[0m[0m wait_for_rollout        = true
+      [32m+[0m[0m yaml_body               = (sensitive value)
+      [32m+[0m[0m yaml_body_parsed        = <<-EOT
+            apiVersion: argoproj.io/v1alpha1
+            kind: Application
+            metadata:
+              name: root-app
+              namespace: argocd
+            spec:
+              destination:
+                namespace: argocd
+                server: https://kubernetes.default.svc
+              project: default
+              source:
+                directory:
+                  recurse: true
+                path: argocd/environments/dev
+                repoURL: https://github.com/shaarron/feature-flags-resources.git
+                targetRevision: main
+              syncPolicy:
+                automated:
+                  prune: true
+                  selfHeal: true
+                syncOptions:
+                - CreateNamespace=true
+                - ApplyOutOfSyncOnly=true
+        EOT
+      [32m+[0m[0m yaml_incluster          = (sensitive value)
+    }
+
+[1m  # kubernetes_namespace.cert_manager[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_namespace" "cert_manager" {
+      [32m+[0m[0m id                               = (known after apply)
+      [32m+[0m[0m wait_for_default_service_account = false
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m name             = "cert-manager"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1m  # kubernetes_namespace.external_secrets[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_namespace" "external_secrets" {
+      [32m+[0m[0m id                               = (known after apply)
+      [32m+[0m[0m wait_for_default_service_account = false
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m name             = "external-secrets"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1m  # kubernetes_service_account.cert_manager[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_service_account" "cert_manager" {
+      [32m+[0m[0m automount_service_account_token = true
+      [32m+[0m[0m default_secret_name             = (known after apply)
+      [32m+[0m[0m id                              = (known after apply)
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m annotations      = (known after apply)
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m labels           = {
+              [32m+[0m[0m "app.kubernetes.io/name" = "cert-manager"
+            }
+          [32m+[0m[0m name             = "cert-manager"
+          [32m+[0m[0m namespace        = "cert-manager"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1m  # kubernetes_service_account.external_secrets[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_service_account" "external_secrets" {
+      [32m+[0m[0m automount_service_account_token = true
+      [32m+[0m[0m default_secret_name             = (known after apply)
+      [32m+[0m[0m id                              = (known after apply)
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m annotations      = (known after apply)
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m labels           = {
+              [32m+[0m[0m "app.kubernetes.io/name" = "external-secrets"
+            }
+          [32m+[0m[0m name             = "external-secrets-sa"
+          [32m+[0m[0m namespace        = "external-secrets"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1m  # time_sleep.wait_5_minutes[0m will be created
+[0m  [32m+[0m[0m resource "time_sleep" "wait_5_minutes" {
+      [32m+[0m[0m create_duration = "5m"
+      [32m+[0m[0m id              = (known after apply)
+    }
+
+[1m  # module.cert_manager.data.aws_iam_policy_document.cert_manager_assume_role[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_iam_policy_document" "cert_manager_assume_role" {
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m json          = (known after apply)
+      [32m+[0m[0m minified_json = (known after apply)
+
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions = [
+              [32m+[0m[0m "sts:AssumeRoleWithWebIdentity",
+            ]
+
+          [32m+[0m[0m condition {
+              [32m+[0m[0m test     = "StringEquals"
+              [32m+[0m[0m values   = [
+                  [32m+[0m[0m "system:serviceaccount:cert-manager:cert-manager",
+                ]
+              [32m+[0m[0m variable = (known after apply)
+            }
+
+          [32m+[0m[0m principals {
+              [32m+[0m[0m identifiers = [
+                  [32m+[0m[0m (known after apply),
+                ]
+              [32m+[0m[0m type        = "Federated"
+            }
+        }
+    }
+
+[1m  # module.cert_manager.data.aws_route53_zone.this[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_route53_zone" "this" {
+      [32m+[0m[0m arn                        = (known after apply)
+      [32m+[0m[0m caller_reference           = (known after apply)
+      [32m+[0m[0m comment                    = (known after apply)
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m linked_service_description = (known after apply)
+      [32m+[0m[0m linked_service_principal   = (known after apply)
+      [32m+[0m[0m name                       = "its-sharon.com"
+      [32m+[0m[0m name_servers               = (known after apply)
+      [32m+[0m[0m primary_name_server        = (known after apply)
+      [32m+[0m[0m resource_record_set_count  = (known after apply)
+      [32m+[0m[0m tags                       = (known after apply)
+      [32m+[0m[0m vpc_id                     = (known after apply)
+      [32m+[0m[0m zone_id                    = (known after apply)
+    }
+
+[1m  # module.cert_manager.aws_iam_policy.cert_manager_route53[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "cert_manager_route53" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Allow cert-manager to manage Route53 records for DNS-01 challenges"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "cert-manager-route53-dns01"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = (known after apply)
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+    }
+
+[1m  # module.cert_manager.aws_iam_role.cert_manager_dns01[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "cert_manager_dns01" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = (known after apply)
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "cert-manager-dns01"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.cert_manager.aws_iam_role_policy_attachment.cert_manager_dns01_attach[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "cert_manager_dns01_attach" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "cert-manager-dns01"
+    }
+
+[1m  # module.cloudfront.data.aws_acm_certificate.cf_cert[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_acm_certificate" "cf_cert" {
+      [32m+[0m[0m arn               = (known after apply)
+      [32m+[0m[0m certificate       = (known after apply)
+      [32m+[0m[0m certificate_chain = (known after apply)
+      [32m+[0m[0m domain            = "*.dev.its-sharon.com"
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m status            = (known after apply)
+      [32m+[0m[0m statuses          = [
+          [32m+[0m[0m "ISSUED",
+        ]
+      [32m+[0m[0m tags              = (known after apply)
+    }
+
+[1m  # module.cloudfront.data.aws_caller_identity.current[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_caller_identity" "current" {
+      [32m+[0m[0m account_id = (known after apply)
+      [32m+[0m[0m arn        = (known after apply)
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m user_id    = (known after apply)
+    }
+
+[1m  # module.cloudfront.data.aws_cloudfront_cache_policy.caching_disabled[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_cloudfront_cache_policy" "caching_disabled" {
+      [32m+[0m[0m arn                                             = (known after apply)
+      [32m+[0m[0m comment                                         = (known after apply)
+      [32m+[0m[0m default_ttl                                     = (known after apply)
+      [32m+[0m[0m etag                                            = (known after apply)
+      [32m+[0m[0m max_ttl                                         = (known after apply)
+      [32m+[0m[0m min_ttl                                         = (known after apply)
+      [32m+[0m[0m name                                            = "Managed-CachingDisabled"
+      [32m+[0m[0m parameters_in_cache_key_and_forwarded_to_origin = (known after apply)
+    }
+
+[1m  # module.cloudfront.data.aws_cloudfront_cache_policy.caching_optimized[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_cloudfront_cache_policy" "caching_optimized" {
+      [32m+[0m[0m arn                                             = (known after apply)
+      [32m+[0m[0m comment                                         = (known after apply)
+      [32m+[0m[0m default_ttl                                     = (known after apply)
+      [32m+[0m[0m etag                                            = (known after apply)
+      [32m+[0m[0m max_ttl                                         = (known after apply)
+      [32m+[0m[0m min_ttl                                         = (known after apply)
+      [32m+[0m[0m name                                            = "Managed-CachingOptimized"
+      [32m+[0m[0m parameters_in_cache_key_and_forwarded_to_origin = (known after apply)
+    }
+
+[1m  # module.cloudfront.aws_cloudfront_distribution.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudfront_distribution" "this" {
+      [32m+[0m[0m aliases                         = [
+          [32m+[0m[0m "feature-flags.dev.its-sharon.com",
+        ]
+      [32m+[0m[0m arn                             = (known after apply)
+      [32m+[0m[0m caller_reference                = (known after apply)
+      [32m+[0m[0m continuous_deployment_policy_id = (known after apply)
+      [32m+[0m[0m default_root_object             = "index.html"
+      [32m+[0m[0m domain_name                     = (known after apply)
+      [32m+[0m[0m enabled                         = true
+      [32m+[0m[0m etag                            = (known after apply)
+      [32m+[0m[0m hosted_zone_id                  = (known after apply)
+      [32m+[0m[0m http_version                    = "http2"
+      [32m+[0m[0m id                              = (known after apply)
+      [32m+[0m[0m in_progress_validation_batches  = (known after apply)
+      [32m+[0m[0m is_ipv6_enabled                 = false
+      [32m+[0m[0m last_modified_time              = (known after apply)
+      [32m+[0m[0m price_class                     = "PriceClass_All"
+      [32m+[0m[0m retain_on_delete                = false
+      [32m+[0m[0m staging                         = false
+      [32m+[0m[0m status                          = (known after apply)
+      [32m+[0m[0m tags                            = {
+          [32m+[0m[0m "Project" = "dev"
+        }
+      [32m+[0m[0m tags_all                        = {
+          [32m+[0m[0m "Project"   = "dev"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m trusted_key_groups              = (known after apply)
+      [32m+[0m[0m trusted_signers                 = (known after apply)
+      [32m+[0m[0m wait_for_deployment             = true
+
+      [32m+[0m[0m default_cache_behavior {
+          [32m+[0m[0m allowed_methods        = [
+              [32m+[0m[0m "GET",
+              [32m+[0m[0m "HEAD",
+            ]
+          [32m+[0m[0m cached_methods         = [
+              [32m+[0m[0m "GET",
+              [32m+[0m[0m "HEAD",
+            ]
+          [32m+[0m[0m compress               = false
+          [32m+[0m[0m default_ttl            = (known after apply)
+          [32m+[0m[0m max_ttl                = (known after apply)
+          [32m+[0m[0m min_ttl                = 0
+          [32m+[0m[0m target_origin_id       = "s3_origin"
+          [32m+[0m[0m trusted_key_groups     = (known after apply)
+          [32m+[0m[0m trusted_signers        = (known after apply)
+          [32m+[0m[0m viewer_protocol_policy = "redirect-to-https"
+
+          [32m+[0m[0m grpc_config (known after apply)
+        }
+
+      [32m+[0m[0m ordered_cache_behavior {
+          [32m+[0m[0m allowed_methods          = [
+              [32m+[0m[0m "DELETE",
+              [32m+[0m[0m "GET",
+              [32m+[0m[0m "HEAD",
+              [32m+[0m[0m "OPTIONS",
+              [32m+[0m[0m "PATCH",
+              [32m+[0m[0m "POST",
+              [32m+[0m[0m "PUT",
+            ]
+          [32m+[0m[0m cached_methods           = [
+              [32m+[0m[0m "GET",
+              [32m+[0m[0m "HEAD",
+            ]
+          [32m+[0m[0m compress                 = false
+          [32m+[0m[0m default_ttl              = (known after apply)
+          [32m+[0m[0m max_ttl                  = (known after apply)
+          [32m+[0m[0m min_ttl                  = 0
+          [32m+[0m[0m origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+          [32m+[0m[0m path_pattern             = "/flags*"
+          [32m+[0m[0m target_origin_id         = "nlb-origin"
+          [32m+[0m[0m viewer_protocol_policy   = "https-only"
+
+          [32m+[0m[0m grpc_config (known after apply)
+        }
+
+      [32m+[0m[0m origin (known after apply)
+
+      [32m+[0m[0m restrictions {
+          [32m+[0m[0m geo_restriction {
+              [32m+[0m[0m locations        = (known after apply)
+              [32m+[0m[0m restriction_type = "none"
+            }
+        }
+
+      [32m+[0m[0m viewer_certificate {
+          [32m+[0m[0m acm_certificate_arn      = (known after apply)
+          [32m+[0m[0m minimum_protocol_version = "TLSv1.2_2021"
+          [32m+[0m[0m ssl_support_method       = "sni-only"
+        }
+    }
+
+[1m  # module.cloudfront.aws_cloudfront_origin_access_control.s3_oac[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudfront_origin_access_control" "s3_oac" {
+      [32m+[0m[0m arn                               = (known after apply)
+      [32m+[0m[0m description                       = "OAC for s3"
+      [32m+[0m[0m etag                              = (known after apply)
+      [32m+[0m[0m id                                = (known after apply)
+      [32m+[0m[0m name                              = "dev_s3_oac"
+      [32m+[0m[0m origin_access_control_origin_type = "s3"
+      [32m+[0m[0m signing_behavior                  = "always"
+      [32m+[0m[0m signing_protocol                  = "sigv4"
+    }
+
+[1m  # module.ebs_csi_irsa_role.data.aws_iam_policy_document.this[0][0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_iam_policy_document" "this" {
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m json          = (known after apply)
+      [32m+[0m[0m minified_json = (known after apply)
+
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions = [
+              [32m+[0m[0m "sts:AssumeRoleWithWebIdentity",
+            ]
+          [32m+[0m[0m effect  = "Allow"
+
+          [32m+[0m[0m condition {
+              [32m+[0m[0m test     = "StringEquals"
+              [32m+[0m[0m values   = [
+                  [32m+[0m[0m "sts.amazonaws.com",
+                ]
+              [32m+[0m[0m variable = (known after apply)
+            }
+          [32m+[0m[0m condition {
+              [32m+[0m[0m test     = "StringEquals"
+              [32m+[0m[0m values   = [
+                  [32m+[0m[0m "system:serviceaccount:kube-system:ebs-csi-controller-sa",
+                ]
+              [32m+[0m[0m variable = (known after apply)
+            }
+
+          [32m+[0m[0m principals {
+              [32m+[0m[0m identifiers = [
+                  [32m+[0m[0m (known after apply),
+                ]
+              [32m+[0m[0m type        = "Federated"
+            }
+        }
+    }
+
+[1m  # module.ebs_csi_irsa_role.aws_iam_policy.ebs_csi[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "ebs_csi" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Provides permissions to manage EBS volumes via the container storage interface driver"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = (known after apply)
+      [32m+[0m[0m name_prefix      = "AmazonEKS_EBS_CSI_Policy-"
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "ec2:ModifyVolume",
+                          [32m+[0m[0m "ec2:DetachVolume",
+                          [32m+[0m[0m "ec2:DescribeVolumesModifications",
+                          [32m+[0m[0m "ec2:DescribeVolumes",
+                          [32m+[0m[0m "ec2:DescribeTags",
+                          [32m+[0m[0m "ec2:DescribeSnapshots",
+                          [32m+[0m[0m "ec2:DescribeInstances",
+                          [32m+[0m[0m "ec2:DescribeAvailabilityZones",
+                          [32m+[0m[0m "ec2:CreateSnapshot",
+                          [32m+[0m[0m "ec2:AttachVolume",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:CreateTags"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringEquals = {
+                              [32m+[0m[0m "ec2:CreateAction" = [
+                                  [32m+[0m[0m "CreateVolume",
+                                  [32m+[0m[0m "CreateSnapshot",
+                                ]
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = [
+                          [32m+[0m[0m "arn:aws:ec2:*:*:volume/*",
+                          [32m+[0m[0m "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = "ec2:DeleteTags"
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "arn:aws:ec2:*:*:volume/*",
+                          [32m+[0m[0m "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:CreateVolume"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "aws:RequestTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:CreateVolume"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "aws:RequestTag/CSIVolumeName" = "*"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:CreateVolume"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "aws:RequestTag/kubernetes.io/cluster/*" = "owned"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:DeleteVolume"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "ec2:ResourceTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:DeleteVolume"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "ec2:ResourceTag/CSIVolumeName" = "*"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:DeleteVolume"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "ec2:ResourceTag/kubernetes.io/cluster/*" = "owned"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:DeleteSnapshot"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "ec2:ResourceTag/CSIVolumeSnapshotName" = "*"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "ec2:DeleteSnapshot"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringLike = {
+                              [32m+[0m[0m "ec2:ResourceTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+    }
+
+[1m  # module.ebs_csi_irsa_role.aws_iam_role.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "this" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = (known after apply)
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = true
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "dev-ebs-csi"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.ebs_csi_irsa_role.aws_iam_role_policy_attachment.ebs_csi[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ebs_csi" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "dev-ebs-csi"
+    }
+
+[1m  # module.ebs_csi_storageclass.kubernetes_annotations.gp2_not_as_default[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_annotations" "gp2_not_as_default" {
+      [32m+[0m[0m annotations   = {
+          [32m+[0m[0m "storageclass.kubernetes.io/is-default-class" = "false"
+        }
+      [32m+[0m[0m api_version   = "storage.k8s.io/v1"
+      [32m+[0m[0m field_manager = "Terraform"
+      [32m+[0m[0m force         = true
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m kind          = "StorageClass"
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m name = "gp2"
+        }
+    }
+
+[1m  # module.ebs_csi_storageclass.kubernetes_storage_class_v1.gp3[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_storage_class_v1" "gp3" {
+      [32m+[0m[0m allow_volume_expansion = true
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m parameters             = {
+          [32m+[0m[0m "csi.storage.k8s.io/fstype" = "ext4"
+          [32m+[0m[0m "type"                      = "gp3"
+        }
+      [32m+[0m[0m reclaim_policy         = "Delete"
+      [32m+[0m[0m storage_provisioner    = "ebs.csi.aws.com"
+      [32m+[0m[0m volume_binding_mode    = "WaitForFirstConsumer"
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m annotations      = {
+              [32m+[0m[0m "storageclass.kubernetes.io/is-default-class" = "true"
+            }
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m name             = "ebs-csi-gp3"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1m  # module.eks.data.tls_certificate.eks[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "tls_certificate" "eks" {
+      [32m+[0m[0m certificates = (known after apply)
+      [32m+[0m[0m id           = (known after apply)
+      [32m+[0m[0m url          = (known after apply)
+    }
+
+[1m  # module.eks.aws_eks_access_entry.cluster_creator[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_access_entry" "cluster_creator" {
+      [32m+[0m[0m access_entry_arn  = (known after apply)
+      [32m+[0m[0m cluster_name      = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m created_at        = (known after apply)
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m kubernetes_groups = (known after apply)
+      [32m+[0m[0m modified_at       = (known after apply)
+      [32m+[0m[0m principal_arn     = "arn:aws:iam::869432184848:user/eks-user"
+      [32m+[0m[0m tags_all          = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m type              = "STANDARD"
+      [32m+[0m[0m user_name         = (known after apply)
+    }
+
+[1m  # module.eks.aws_eks_access_policy_association.admin[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_access_policy_association" "admin" {
+      [32m+[0m[0m associated_at = (known after apply)
+      [32m+[0m[0m cluster_name  = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m modified_at   = (known after apply)
+      [32m+[0m[0m policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+      [32m+[0m[0m principal_arn = "arn:aws:iam::869432184848:user/eks-user"
+
+      [32m+[0m[0m access_scope {
+          [32m+[0m[0m type = "cluster"
+        }
+    }
+
+[1m  # module.eks.aws_eks_cluster.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_cluster" "this" {
+      [32m+[0m[0m arn                           = (known after apply)
+      [32m+[0m[0m bootstrap_self_managed_addons = true
+      [32m+[0m[0m certificate_authority         = (known after apply)
+      [32m+[0m[0m cluster_id                    = (known after apply)
+      [32m+[0m[0m created_at                    = (known after apply)
+      [32m+[0m[0m endpoint                      = (known after apply)
+      [32m+[0m[0m id                            = (known after apply)
+      [32m+[0m[0m identity                      = (known after apply)
+      [32m+[0m[0m name                          = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m platform_version              = (known after apply)
+      [32m+[0m[0m role_arn                      = (known after apply)
+      [32m+[0m[0m status                        = (known after apply)
+      [32m+[0m[0m tags_all                      = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m version                       = "1.32"
+
+      [32m+[0m[0m access_config {
+          [32m+[0m[0m authentication_mode                         = "API_AND_CONFIG_MAP"
+          [32m+[0m[0m bootstrap_cluster_creator_admin_permissions = false
+        }
+
+      [32m+[0m[0m encryption_config {
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m "secrets",
+            ]
+
+          [32m+[0m[0m provider {
+              [32m+[0m[0m key_arn = "arn:aws:kms:ap-south-1:869432184848:key/400cfeef-6d30-4d63-bf53-eaa387a65456"
+            }
+        }
+
+      [32m+[0m[0m kubernetes_network_config (known after apply)
+
+      [32m+[0m[0m upgrade_policy (known after apply)
+
+      [32m+[0m[0m vpc_config {
+          [32m+[0m[0m cluster_security_group_id = (known after apply)
+          [32m+[0m[0m endpoint_private_access   = true
+          [32m+[0m[0m endpoint_public_access    = true
+          [32m+[0m[0m public_access_cidrs       = (known after apply)
+          [32m+[0m[0m subnet_ids                = (known after apply)
+          [32m+[0m[0m vpc_id                    = (known after apply)
+        }
+    }
+
+[1m  # module.eks.aws_eks_node_group.main["main"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_node_group" "main" {
+      [32m+[0m[0m ami_type               = (known after apply)
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m capacity_type          = "ON_DEMAND"
+      [32m+[0m[0m cluster_name           = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m disk_size              = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m instance_types         = [
+          [32m+[0m[0m "t3.medium",
+        ]
+      [32m+[0m[0m node_group_name        = "dev-main"
+      [32m+[0m[0m node_group_name_prefix = (known after apply)
+      [32m+[0m[0m node_role_arn          = (known after apply)
+      [32m+[0m[0m release_version        = (known after apply)
+      [32m+[0m[0m resources              = (known after apply)
+      [32m+[0m[0m status                 = (known after apply)
+      [32m+[0m[0m subnet_ids             = (known after apply)
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "dev-eks-worker-node"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name"      = "dev-eks-worker-node"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m version                = (known after apply)
+
+      [32m+[0m[0m node_repair_config (known after apply)
+
+      [32m+[0m[0m scaling_config {
+          [32m+[0m[0m desired_size = 2
+          [32m+[0m[0m max_size     = 3
+          [32m+[0m[0m min_size     = 1
+        }
+
+      [32m+[0m[0m update_config {
+          [32m+[0m[0m max_unavailable = 1
+        }
+    }
+
+[1m  # module.eks.aws_iam_openid_connect_provider.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_openid_connect_provider" "this" {
+      [32m+[0m[0m arn             = (known after apply)
+      [32m+[0m[0m client_id_list  = [
+          [32m+[0m[0m "sts.amazonaws.com",
+        ]
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m tags_all        = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m thumbprint_list = (known after apply)
+      [32m+[0m[0m url             = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.eks_cluster[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "eks_cluster" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "dev-eks-cluster-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.eks_nodes[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "eks_nodes" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "dev-eks-node-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role_policy.eks_kms_access[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy" "eks_kms_access" {
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "dev-kms-access"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m policy      = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "kms:Encrypt",
+                          [32m+[0m[0m "kms:Decrypt",
+                          [32m+[0m[0m "kms:ReEncrypt*",
+                          [32m+[0m[0m "kms:GenerateDataKey*",
+                          [32m+[0m[0m "kms:DescribeKey",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "arn:aws:kms:ap-south-1:869432184848:key/400cfeef-6d30-4d63-bf53-eaa387a65456"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m role        = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.eks_cluster_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+      [32m+[0m[0m role       = "dev-eks-cluster-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      [32m+[0m[0m role       = "dev-eks-node-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      [32m+[0m[0m role       = "dev-eks-node-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "node_AmazonEKS_CNI_Policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      [32m+[0m[0m role       = "dev-eks-node-role"
+    }
+
+[1m  # module.eks.aws_security_group.nodes[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "nodes" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for all nodes in the cluster"
+      [32m+[0m[0m egress                 = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_blocks      = [
+                  [32m+[0m[0m "0.0.0.0/0",
+                ]
+              [32m+[0m[0m from_port        = 0
+              [32m+[0m[0m ipv6_cidr_blocks = []
+              [32m+[0m[0m prefix_list_ids  = []
+              [32m+[0m[0m protocol         = "-1"
+              [32m+[0m[0m security_groups  = []
+              [32m+[0m[0m self             = false
+              [32m+[0m[0m to_port          = 0
+                [90m# (1 unchanged attribute hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "dev-eks-nodes-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "kubernetes.io/cluster/dev-custom-cluster" = "owned"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "app_name"                                 = "feature-flags"
+          [32m+[0m[0m "kubernetes.io/cluster/dev-custom-cluster" = "owned"
+          [32m+[0m[0m "managedBy"                                = "terraform"
+          [32m+[0m[0m "owner"                                    = "SharonK"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # module.eks.aws_security_group_rule.control_plane_to_nodes[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "control_plane_to_nodes" {
+      [32m+[0m[0m description              = "Allow worker nodes to receive communication from the cluster control plane"
+      [32m+[0m[0m from_port                = 1025
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 65535
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.eks.aws_security_group_rule.nodes_internal[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "nodes_internal" {
+      [32m+[0m[0m description              = "Allow nodes to communicate with each other"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 65535
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.eks_blueprints_addons.aws_cloudformation_stack.usage_telemetry[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudformation_stack" "usage_telemetry" {
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m name          = (sensitive value)
+      [32m+[0m[0m on_failure    = "DO_NOTHING"
+      [32m+[0m[0m outputs       = (known after apply)
+      [32m+[0m[0m parameters    = (known after apply)
+      [32m+[0m[0m policy_body   = (known after apply)
+      [32m+[0m[0m tags_all      = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m template_body = jsonencode(
+            {
+              [32m+[0m[0m AWSTemplateFormatVersion = "2010-09-09"
+              [32m+[0m[0m Description              = "Usage telemetry for EKS Blueprints. (qs-1ubotj5kl)"
+              [32m+[0m[0m Resources                = {
+                  [32m+[0m[0m EmptyResource = {
+                      [32m+[0m[0m Type = "AWS::CloudFormation::WaitConditionHandle"
+                    }
+                }
+            }
+        )
+    }
+
+[1m  # module.eks_blueprints_addons.aws_eks_addon.this["aws-ebs-csi-driver"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "aws-ebs-csi-driver"
+      [32m+[0m[0m addon_version               = "v1.54.0-eksbuild.1"
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m preserve                    = true
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m service_account_role_arn    = (known after apply)
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+
+      [32m+[0m[0m timeouts {}
+    }
+
+[1m  # module.eks_blueprints_addons.aws_eks_addon.this["coredns"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "coredns"
+      [32m+[0m[0m addon_version               = "v1.11.4-eksbuild.24"
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m preserve                    = true
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+
+      [32m+[0m[0m timeouts {}
+    }
+
+[1m  # module.eks_blueprints_addons.aws_eks_addon.this["kube-proxy"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "kube-proxy"
+      [32m+[0m[0m addon_version               = "v1.32.9-eksbuild.2"
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m preserve                    = true
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+
+      [32m+[0m[0m timeouts {}
+    }
+
+[1m  # module.eks_blueprints_addons.aws_eks_addon.this["vpc-cni"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "vpc-cni"
+      [32m+[0m[0m addon_version               = "v1.21.1-eksbuild.1"
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "dev-eks-cluster-eks-cluster"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m preserve                    = true
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+
+      [32m+[0m[0m timeouts {}
+    }
+
+[1m  # module.eks_blueprints_addons.random_bytes.this[0m will be created
+[0m  [32m+[0m[0m resource "random_bytes" "this" {
+      [32m+[0m[0m base64 = (sensitive value)
+      [32m+[0m[0m hex    = (sensitive value)
+      [32m+[0m[0m length = 2
+    }
+
+[1m  # module.eks_blueprints_addons.time_sleep.this[0m will be created
+[0m  [32m+[0m[0m resource "time_sleep" "this" {
+      [32m+[0m[0m create_duration = "30s"
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m triggers        = {
+          [32m+[0m[0m "cluster_endpoint"  = (known after apply)
+          [32m+[0m[0m "cluster_name"      = "dev-eks-cluster-eks-cluster"
+          [32m+[0m[0m "custom"            = [90mnull[0m[0m
+          [32m+[0m[0m "oidc_provider_arn" = (known after apply)
+        }
+    }
+
+[1m  # module.external_secrets_iam.aws_iam_policy.external_secrets_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "external_secrets_policy" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for External Secrets Operator to access Secrets Manager"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "external-secrets-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "secretsmanager:GetSecretValue",
+                          [32m+[0m[0m "secretsmanager:DescribeSecret",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "arn:aws:secretsmanager:ap-south-1:869432184848:secret:feature-flags/*",
+                        ]
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+    }
+
+[1m  # module.external_secrets_iam.aws_iam_role.external_secrets_role[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "external_secrets_role" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = (known after apply)
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "external-secrets-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.external_secrets_iam.aws_iam_role_policy_attachment.external_secrets_policy_attachment[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "external_secrets_policy_attachment" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "external-secrets-role"
+    }
+
+[1m  # module.network.aws_eip.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eip" "this" {
+      [32m+[0m[0m allocation_id        = (known after apply)
+      [32m+[0m[0m arn                  = (known after apply)
+      [32m+[0m[0m association_id       = (known after apply)
+      [32m+[0m[0m carrier_ip           = (known after apply)
+      [32m+[0m[0m customer_owned_ip    = (known after apply)
+      [32m+[0m[0m domain               = "vpc"
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m instance             = (known after apply)
+      [32m+[0m[0m ipam_pool_id         = (known after apply)
+      [32m+[0m[0m network_border_group = (known after apply)
+      [32m+[0m[0m network_interface    = (known after apply)
+      [32m+[0m[0m private_dns          = (known after apply)
+      [32m+[0m[0m private_ip           = (known after apply)
+      [32m+[0m[0m ptr_record           = (known after apply)
+      [32m+[0m[0m public_dns           = (known after apply)
+      [32m+[0m[0m public_ip            = (known after apply)
+      [32m+[0m[0m public_ipv4_pool     = (known after apply)
+      [32m+[0m[0m tags                 = {
+          [32m+[0m[0m "Name" = "dev-EIP-0"
+        }
+      [32m+[0m[0m tags_all             = {
+          [32m+[0m[0m "Name"      = "dev-EIP-0"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc                  = (known after apply)
+    }
+
+[1m  # module.network.aws_internet_gateway.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_internet_gateway" "this" {
+      [32m+[0m[0m arn      = (known after apply)
+      [32m+[0m[0m id       = (known after apply)
+      [32m+[0m[0m owner_id = (known after apply)
+      [32m+[0m[0m tags     = {
+          [32m+[0m[0m "Name" = "dev-IGW"
+        }
+      [32m+[0m[0m tags_all = {
+          [32m+[0m[0m "Name"      = "dev-IGW"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id   = (known after apply)
+    }
+
+[1m  # module.network.aws_nat_gateway.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_nat_gateway" "this" {
+      [32m+[0m[0m allocation_id                      = (known after apply)
+      [32m+[0m[0m association_id                     = (known after apply)
+      [32m+[0m[0m connectivity_type                  = "public"
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m network_interface_id               = (known after apply)
+      [32m+[0m[0m private_ip                         = (known after apply)
+      [32m+[0m[0m public_ip                          = (known after apply)
+      [32m+[0m[0m secondary_private_ip_address_count = (known after apply)
+      [32m+[0m[0m secondary_private_ip_addresses     = (known after apply)
+      [32m+[0m[0m subnet_id                          = (known after apply)
+      [32m+[0m[0m tags                               = {
+          [32m+[0m[0m "Name" = "dev-NAT-GW-0"
+        }
+      [32m+[0m[0m tags_all                           = {
+          [32m+[0m[0m "Name"      = "dev-NAT-GW-0"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+    }
+
+[1m  # module.network.aws_route_table.private[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "private" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_block                 = "0.0.0.0/0"
+              [32m+[0m[0m nat_gateway_id             = (known after apply)
+                [90m# (11 unchanged attributes hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "dev-PRIVATE-RTB-0"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "Name"      = "dev-PRIVATE-RTB-0"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # module.network.aws_route_table.private[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "private" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_block                 = "0.0.0.0/0"
+              [32m+[0m[0m nat_gateway_id             = (known after apply)
+                [90m# (11 unchanged attributes hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "dev-PRIVATE-RTB-1"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "Name"      = "dev-PRIVATE-RTB-1"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # module.network.aws_route_table.public[0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "public" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_block                 = "0.0.0.0/0"
+              [32m+[0m[0m gateway_id                 = (known after apply)
+                [90m# (11 unchanged attributes hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "dev-PUBLIC-RTB"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "Name"      = "dev-PUBLIC-RTB"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # module.network.aws_route_table_association.private[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.network.aws_route_table_association.private[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.network.aws_route_table_association.public[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.network.aws_route_table_association.public[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.network.aws_subnet.private[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-south-1a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.2.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "dev-PRIVATE-SUBNET-0"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name"      = "dev-PRIVATE-SUBNET-0"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.network.aws_subnet.private[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-south-1b"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.3.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "dev-PRIVATE-SUBNET-1"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name"      = "dev-PRIVATE-SUBNET-1"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.network.aws_subnet.public[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-south-1a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.0.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = true
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "dev-PUBLIC-SUBNET-0"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name"      = "dev-PUBLIC-SUBNET-0"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.network.aws_subnet.public[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-south-1b"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.1.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = true
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "dev-PUBLIC-SUBNET-1"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name"      = "dev-PUBLIC-SUBNET-1"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.network.aws_vpc.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc" "this" {
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m cidr_block                           = "10.0.0.0/16"
+      [32m+[0m[0m default_network_acl_id               = (known after apply)
+      [32m+[0m[0m default_route_table_id               = (known after apply)
+      [32m+[0m[0m default_security_group_id            = (known after apply)
+      [32m+[0m[0m dhcp_options_id                      = (known after apply)
+      [32m+[0m[0m enable_dns_hostnames                 = true
+      [32m+[0m[0m enable_dns_support                   = true
+      [32m+[0m[0m enable_network_address_usage_metrics = (known after apply)
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_tenancy                     = "default"
+      [32m+[0m[0m ipv6_association_id                  = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block                      = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_network_border_group = (known after apply)
+      [32m+[0m[0m main_route_table_id                  = (known after apply)
+      [32m+[0m[0m owner_id                             = (known after apply)
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "Name" = "dev-VPC"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "Name"      = "dev-VPC"
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+    }
+
+[1m  # module.route53.data.aws_cloudfront_distribution.cf["feature-flags.dev"][0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_cloudfront_distribution" "cf" {
+      [32m+[0m[0m aliases                        = (known after apply)
+      [32m+[0m[0m arn                            = (known after apply)
+      [32m+[0m[0m domain_name                    = (known after apply)
+      [32m+[0m[0m enabled                        = (known after apply)
+      [32m+[0m[0m etag                           = (known after apply)
+      [32m+[0m[0m hosted_zone_id                 = (known after apply)
+      [32m+[0m[0m id                             = (known after apply)
+      [32m+[0m[0m in_progress_validation_batches = (known after apply)
+      [32m+[0m[0m last_modified_time             = (known after apply)
+      [32m+[0m[0m status                         = (known after apply)
+      [32m+[0m[0m tags                           = (known after apply)
+      [32m+[0m[0m web_acl_id                     = (known after apply)
+    }
+
+[1m  # module.route53.data.aws_route53_zone.this[0m will be read during apply
+  # (depends on a resource or a module with changes pending)
+[0m [36m<=[0m[0m data "aws_route53_zone" "this" {
+      [32m+[0m[0m arn                        = (known after apply)
+      [32m+[0m[0m caller_reference           = (known after apply)
+      [32m+[0m[0m comment                    = (known after apply)
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m linked_service_description = (known after apply)
+      [32m+[0m[0m linked_service_principal   = (known after apply)
+      [32m+[0m[0m name                       = "its-sharon.com"
+      [32m+[0m[0m name_servers               = (known after apply)
+      [32m+[0m[0m primary_name_server        = (known after apply)
+      [32m+[0m[0m resource_record_set_count  = (known after apply)
+      [32m+[0m[0m tags                       = (known after apply)
+      [32m+[0m[0m vpc_id                     = (known after apply)
+      [32m+[0m[0m zone_id                    = (known after apply)
+    }
+
+[1m  # module.route53.aws_route53_record.cf_records["feature-flags.dev"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route53_record" "cf_records" {
+      [32m+[0m[0m allow_overwrite = (known after apply)
+      [32m+[0m[0m fqdn            = (known after apply)
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m name            = "feature-flags.dev.its-sharon.com"
+      [32m+[0m[0m type            = "A"
+      [32m+[0m[0m zone_id         = (known after apply)
+
+      [32m+[0m[0m alias {
+          [32m+[0m[0m evaluate_target_health = false
+          [32m+[0m[0m name                   = (known after apply)
+          [32m+[0m[0m zone_id                = (known after apply)
+        }
+    }
+
+[1m  # module.route53.aws_route53_record.nlb_records["grafana.dev"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route53_record" "nlb_records" {
+      [32m+[0m[0m allow_overwrite = (known after apply)
+      [32m+[0m[0m fqdn            = (known after apply)
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m name            = "grafana.dev.its-sharon.com"
+      [32m+[0m[0m type            = "A"
+      [32m+[0m[0m zone_id         = (known after apply)
+
+      [32m+[0m[0m alias {
+          [32m+[0m[0m evaluate_target_health = false
+          [32m+[0m[0m name                   = (known after apply)
+          [32m+[0m[0m zone_id                = (known after apply)
+        }
+    }
+
+[1m  # module.route53.aws_route53_record.nlb_records["kibana.dev"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route53_record" "nlb_records" {
+      [32m+[0m[0m allow_overwrite = (known after apply)
+      [32m+[0m[0m fqdn            = (known after apply)
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m name            = "kibana.dev.its-sharon.com"
+      [32m+[0m[0m type            = "A"
+      [32m+[0m[0m zone_id         = (known after apply)
+
+      [32m+[0m[0m alias {
+          [32m+[0m[0m evaluate_target_health = false
+          [32m+[0m[0m name                   = (known after apply)
+          [32m+[0m[0m zone_id                = (known after apply)
+        }
+    }
+
+[1m  # module.s3_frontend.aws_s3_bucket.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket" "this" {
+      [32m+[0m[0m acceleration_status         = (known after apply)
+      [32m+[0m[0m acl                         = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m bucket                      = "feature-flags-frontend-dev-sharon"
+      [32m+[0m[0m bucket_domain_name          = (known after apply)
+      [32m+[0m[0m bucket_prefix               = (known after apply)
+      [32m+[0m[0m bucket_regional_domain_name = (known after apply)
+      [32m+[0m[0m force_destroy               = false
+      [32m+[0m[0m hosted_zone_id              = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m object_lock_enabled         = (known after apply)
+      [32m+[0m[0m policy                      = (known after apply)
+      [32m+[0m[0m region                      = (known after apply)
+      [32m+[0m[0m request_payer               = (known after apply)
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "app_name"  = "feature-flags"
+          [32m+[0m[0m "managedBy" = "terraform"
+          [32m+[0m[0m "owner"     = "SharonK"
+        }
+      [32m+[0m[0m website_domain              = (known after apply)
+      [32m+[0m[0m website_endpoint            = (known after apply)
+
+      [32m+[0m[0m cors_rule (known after apply)
+
+      [32m+[0m[0m grant (known after apply)
+
+      [32m+[0m[0m lifecycle_rule (known after apply)
+
+      [32m+[0m[0m logging (known after apply)
+
+      [32m+[0m[0m object_lock_configuration (known after apply)
+
+      [32m+[0m[0m replication_configuration (known after apply)
+
+      [32m+[0m[0m server_side_encryption_configuration (known after apply)
+
+      [32m+[0m[0m versioning (known after apply)
+
+      [32m+[0m[0m website (known after apply)
+    }
+
+[1m  # module.s3_frontend.aws_s3_bucket_policy.bucket_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_policy" "bucket_policy" {
+      [32m+[0m[0m bucket = (known after apply)
+      [32m+[0m[0m id     = (known after apply)
+      [32m+[0m[0m policy = (known after apply)
+    }
+
+[1m  # module.s3_frontend.aws_s3_bucket_public_access_block.block_public_access[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_public_access_block" "block_public_access" {
+      [32m+[0m[0m block_public_acls       = true
+      [32m+[0m[0m block_public_policy     = true
+      [32m+[0m[0m bucket                  = (known after apply)
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m ignore_public_acls      = true
+      [32m+[0m[0m restrict_public_buckets = true
+    }
+
+[1m  # module.s3_frontend.aws_s3_bucket_server_side_encryption_configuration.server_side_encryption[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_server_side_encryption_configuration" "server_side_encryption" {
+      [32m+[0m[0m bucket = "feature-flags-frontend-dev-sharon"
+      [32m+[0m[0m id     = (known after apply)
+
+      [32m+[0m[0m rule {
+          [32m+[0m[0m apply_server_side_encryption_by_default {
+              [32m+[0m[0m sse_algorithm     = "AES256"
+                [90m# (1 unchanged attribute hidden)[0m[0m
+            }
+        }
+    }
+
+[1m  # module.s3_frontend.aws_s3_bucket_versioning.versioning[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_versioning" "versioning" {
+      [32m+[0m[0m bucket = (known after apply)
+      [32m+[0m[0m id     = (known after apply)
+
+      [32m+[0m[0m versioning_configuration {
+          [32m+[0m[0m mfa_delete = (known after apply)
+          [32m+[0m[0m status     = "Enabled"
+        }
+    }
+
+[1mPlan:[0m 65 to add, 0 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m cluster_connect  = "aws eks update-kubeconfig --region ap-south-1 --name dev-eks-cluster-eks-cluster"
+  [32m+[0m[0m cluster_endpoint = (known after apply)
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
