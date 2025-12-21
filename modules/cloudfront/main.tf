@@ -16,6 +16,10 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
 
+data "aws_cloudfront_origin_request_policy" "all_viewer" {
+  name = "Managed-AllViewer"
+}
+
 data "aws_acm_certificate" "cf_cert" {
   domain   = var.cert_domain_name
   statuses = ["ISSUED"]
@@ -67,7 +71,7 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = var.default_cache_behavior.viewer_protocol_policy
 
     cache_policy_id = var.default_cache_behavior.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
-    origin_request_policy_id = var.default_cache_behavior.cache_policy_optimized ? null : "216adef6-5c7f-47e4-b989-5492eafa07d3"
+    origin_request_policy_id = var.default_cache_behavior.cache_policy_optimized ? null : data.aws_cloudfront_origin_request_policy.all_viewer.id
     min_ttl     = null
     default_ttl = null
     max_ttl     = null
