@@ -27,7 +27,7 @@ output "oidc_provider_arn" {
   value = aws_iam_openid_connect_provider.this.arn
 }
 
-# Some modules want just the "provider" part (the URL without https://)
+# Only "provider" part (the URL without https://)
 output "oidc_provider" {
   value = replace(aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
 }

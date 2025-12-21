@@ -20,26 +20,6 @@ locals {
   cf_records  = { for k, v in var.sub_domains : k => v if v.type == "cloudfront" }
 }
 
-data "kubernetes_service" "ingress_nginx_controller" {
-  metadata {
-    name      = "ingress-nginx-controller"
-    namespace = "ingress-nginx"
-  }
-}
-
-locals {
-  nlb_hostname = data.kubernetes_service.ingress_nginx_controller.status[0].load_balancer[0].ingress[0].hostname
-}
-
-# data "aws_elb_hosted_zone_id" "current" {}
-
-# Data source to fetch the NLB object details using its DNS name
-data "aws_lb" "nlb_lookup" {
-  # name = split(".", local.nlb_hostname)[0] # The NLB name is the first part of the DNS name
-  name = substr(split(".", local.nlb_hostname)[0], 0, 32)
-
-}
-
 resource "aws_route53_record" "nlb_records" {
   for_each = local.nlb_records
 
@@ -48,8 +28,8 @@ resource "aws_route53_record" "nlb_records" {
   type    = "A"
 
   alias {
-    name                   = local.nlb_hostname
-    zone_id                = data.aws_lb.nlb_lookup.zone_id
+    name                   = var.nlb_hostname
+    zone_id                = var.nlb_zone_id
     evaluate_target_health = false
   }
 }

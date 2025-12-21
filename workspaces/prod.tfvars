@@ -8,6 +8,6 @@ availability_zones = 3
 single_nat_gateway = false
 
 # EKS
-cluster_version = "1.31"
+cluster_version = "1.32"
 node_type       = "t3.large"
-
+kms_key_arn = "<prod kms key arn>"

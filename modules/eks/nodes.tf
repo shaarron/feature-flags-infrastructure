@@ -11,7 +11,6 @@ resource "aws_eks_node_group" "main" {
     max_size     = each.value.scaling_config.max_size
   }
 
-  # Compute Configuration
   instance_types = each.value.instance_types
   capacity_type  = each.value.capacity_type
 

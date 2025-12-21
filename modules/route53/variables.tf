@@ -15,3 +15,12 @@ variable "sub_domains" {
     cf_id    = optional(string) # if type = "cloudfront"
   }))
 }
+
+variable "nlb_hostname" {
+   type = string 
+
+}
+variable "nlb_zone_id"  {
+   type = string 
+   
+}
