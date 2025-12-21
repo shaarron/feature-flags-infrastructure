@@ -10,6 +10,7 @@ resource "aws_security_group" "nodes" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
 
   tags = {
     # Essential tag for EKS to recognize the security group

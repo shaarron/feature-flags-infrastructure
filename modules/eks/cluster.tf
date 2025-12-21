@@ -20,7 +20,6 @@ resource "aws_eks_cluster" "this" {
     }
 
   vpc_config {
-    # Use the variables here
     subnet_ids              = var.subnet_ids
     endpoint_private_access = true
   }
