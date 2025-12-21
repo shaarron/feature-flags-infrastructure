@@ -18,6 +18,8 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 
 ### [Modules](modules)
 
+All the modules are **custom-developed** for this project.
+
 These modules are composed by the main application stack in `terraform/`.
 
 | Module                   | Purpose                                                                                                                                      |
@@ -29,6 +31,8 @@ These modules are composed by the main application stack in `terraform/`.
 | `s3/`                    | Creates S3 buckets with encryption and access control.                                                                                       |
 | `cert-manager/`          | Configures IAM roles (IRSA) for cert-manager to manage Route53 DNS records for DNS-01 challenges.                                            |
 | `external-secrets-iam/`  | Configures IAM permissions for External Secrets Operator to read from AWS Secrets Manager.                                                   |
+| `eks/`                   | Creates an EKS cluster with managed node groups, IAM roles for service accounts (IRSA), and necessary security groups.                       |
+
 
 
 ### **[Terraform](terraform)**
@@ -99,7 +103,7 @@ To successfully apply this Terraform configuration, the IAM user or role running
 
 ### [Feature Flags Infrastructure](.github/workflows/feature-flags-infrastructure.yaml)
 
-This workflow validates, plans and apply the terraform files based on the user  provision AWS infrastructure resources.
+This workflow validates, plans and applys the terraform files based on the user  provision AWS infrastructure resources.
 
 ## Getting started
 
