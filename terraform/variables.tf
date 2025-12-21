@@ -19,7 +19,7 @@ variable "aws_region" {
 }
 
 
-#### Network module variables
+#### Network
 variable "availability_zones" {
   type        = number
   description = "Amount of availability zones to use for the VPC"
@@ -36,21 +36,8 @@ variable "vpc_cidrs" {
   type        = string
 }
 
-#### EKS module variables
-variable "cluster_version" {
-  type = string
-}
 
-variable "node_type" {
-  type = string
-}
-
-variable "kms_key_arn" {
-  description = "The kms key arn for the eks cluster"
-  type        = string
-}
-
-#### domain variables
+#### Domain
 variable "web_app_domain_name" {
   description = "Domain name for the web application"
   type        = string
@@ -62,7 +49,8 @@ variable "cert_domain_name" {
 
 }
 
-# S3 module variables
+
+#### S3
 variable "s3_force_destroy" {
   description = "Force destroy the S3 bucket and its contents"
   type        = bool
@@ -91,7 +79,8 @@ variable "server_side_encryption" {
   type        = bool
 }
 
-#### CloudFront module variables
+
+#### CloudFront
 variable "origin_access_control_origin_type" {
   description = "Origin access control origin type (e.g., s3)"
   type        = string
@@ -167,8 +156,36 @@ variable "cf_aliases" {
 
 }
 
-variable "dns_ready" {
-  type        = bool
-  default     = false
-  description = "Set to true only after the EKS cluster and Ingress are live"
+
+#### EKS
+variable "cluster_version" {
+  type = string
+}
+
+variable "kms_key_arn" {
+  description = "The kms key arn for the eks cluster"
+  type        = string
+}
+
+variable "node_type" {
+  description = "EC2 instance type for the EKS node group"
+  type = string
+}
+
+variable "node_group_desired_size" {
+  description = "Desired size of the EKS node group"
+  type        = number
+  
+}
+
+variable "node_group_min_size" {
+  description = "Minimum size of the EKS node group"
+  type        = number
+  
+}
+
+variable "node_group_max_size" {
+  description = "Maximum size of the EKS node group"
+  type        = number
+  
 }

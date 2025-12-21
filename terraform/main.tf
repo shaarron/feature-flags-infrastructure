@@ -4,14 +4,7 @@ locals {
   account_id  = data.aws_caller_identity.current.account_id
   name_prefix = terraform.workspace
 
-}
-
-locals {
   full_dns_name = data.kubernetes_service.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
-  # lb_name       = split(".", local.full_dns_name)[0]
-
-  # Split by "." to get the name, then substr to ensure it's exactly 32 chars max
-  # This prevents the ValidationError 400
   lb_name_full  = split(".", local.full_dns_name)[0]
   lb_name       = substr(local.lb_name_full, 0, 32)
 }
@@ -22,7 +15,7 @@ data "aws_lb" "ingress_nlb" {
 
 data "kubernetes_service" "ingress_nginx_controller" {
   metadata {
-    name      = "ingress-nginx-controller" # controller svc name
+    name      = "ingress-nginx-controller"
     namespace = "ingress-nginx"
   }
 
@@ -53,11 +46,11 @@ module "eks" {
   node_groups = {
     main = {
       node_group_name = "main"
-      instance_types  = ["t3.medium"]
+      instance_types  = ["${var.node_type}"]
       scaling_config = {
-        desired_size = 2
-        min_size     = 1
-        max_size     = 3
+        desired_size = var.node_group_desired_size
+        min_size     = var.node_group_min_size
+        max_size     = var.node_group_max_size
       }
     }
   }

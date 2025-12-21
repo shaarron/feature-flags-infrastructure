@@ -9,9 +9,10 @@ server_side_encryption            = true
 s3_force_destroy                  = false
 origin_access_control_origin_type = "s3"
 
-# network
+# Network
 vpc_cidrs = "10.0.0.0/16"
 
+# Cloudfront
 default_cache_behavior = {
   allowed_methods        = ["GET", "HEAD"]
   cached_methods         = ["GET", "HEAD"]
@@ -28,3 +29,4 @@ ordered_cache_behavior = [{
   viewer_protocol_policy = "https-only"
   target_origin_id       = "nlb-origin"
 }]
+

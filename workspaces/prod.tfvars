@@ -9,5 +9,8 @@ single_nat_gateway = false
 
 # EKS
 cluster_version = "1.32"
-node_type       = "t3.large"
+node_type       = "r6a.large"
+node_group_desired_size = 2
+node_group_min_size = 1
+node_group_max_size = 4
 #kms_key_arn = <prod kms key arn>
