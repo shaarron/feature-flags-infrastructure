@@ -15,7 +15,7 @@ resource "aws_eks_node_group" "main" {
   capacity_type  = each.value.capacity_type
 
   update_config {
-    max_unavailable = 1 # Keep at least 1 node running during updates
+    max_unavailable = 1 # Update one node at a time
   }
 
   # Critical Dependencies
