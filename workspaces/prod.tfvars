@@ -10,4 +10,4 @@ single_nat_gateway = false
 # EKS
 cluster_version = "1.32"
 node_type       = "t3.large"
-kms_key_arn = "<prod kms key arn>"
+#kms_key_arn = <prod kms key arn>
