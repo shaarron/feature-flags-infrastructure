@@ -1,8 +1,9 @@
 resource "aws_eks_cluster" "this" {
-  name     = "${var.cluster_name}-eks-cluster"
+  name     = "${var.cluster_name}"
   role_arn = aws_iam_role.eks_cluster.arn
   version  = var.cluster_version
 
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
   access_config {
     authentication_mode = "API_AND_CONFIG_MAP"
     # Disable bootstrap admin permissions to use Access Entries

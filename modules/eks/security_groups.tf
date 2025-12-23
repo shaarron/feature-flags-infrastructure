@@ -14,7 +14,7 @@ resource "aws_security_group" "nodes" {
 
   tags = {
     # Essential tag for EKS to recognize the security group
-    "kubernetes.io/cluster/${var.name_prefix}-custom-cluster" = "owned"
+    "kubernetes.io/cluster/${aws_eks_cluster.this.name}" = "owned"
   }
 }
 

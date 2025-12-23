@@ -1,4 +1,7 @@
-# Define the Trust Policy (Who can use this role?)
+locals {
+  oidc_url_short = replace(aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
+}
+
 resource "aws_iam_role" "eks_cluster" {
   name = "${var.name_prefix}-eks-cluster-role"
 
@@ -50,9 +53,31 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
   role       = aws_iam_role.eks_nodes.name
 }
 
-resource "aws_iam_role_policy_attachment" "node_AmazonEKS_CNI_Policy" {
+
+# Dedicated role for the VPC CNI
+resource "aws_iam_role" "vpc_cni_irsa" {
+  name = "${var.name_prefix}-vpc-cni-irsa-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Effect = "Allow"
+      Principal = {
+        Federated = aws_iam_openid_connect_provider.this.arn
+      }
+      Condition = {
+        StringEquals = {
+          "${local.oidc_url_short}:sub": "system:serviceaccount:kube-system:aws-node"
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "vpc_cni_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.eks_nodes.name
+  role       = aws_iam_role.vpc_cni_irsa.name
 }
 
 resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {

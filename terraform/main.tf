@@ -3,7 +3,6 @@ data "aws_caller_identity" "current" {}
 locals {
   account_id  = data.aws_caller_identity.current.account_id
   name_prefix = terraform.workspace
-
   full_dns_name = data.kubernetes_service.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
   lb_name_full  = split(".", local.full_dns_name)[0]
   lb_name       = substr(local.lb_name_full, 0, 32)
@@ -74,12 +73,16 @@ module "eks_blueprints_addons" {
       most_recent              = true
       service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
     }
+
+    vpc-cni = {
+      most_recent = true
+      service_account_role_arn = module.eks.cni_irsa_role.iam_role_arn
+    }
+
     coredns = {
       most_recent = true
     }
-    vpc-cni = {
-      most_recent = true
-    }
+
     kube-proxy = {
       most_recent = true
     }
@@ -243,6 +246,7 @@ resource "kubernetes_service_account" "external_secrets" {
   automount_service_account_token = true
   depends_on                      = [module.external_secrets_iam, kubernetes_namespace.external_secrets]
 }
+
 module "cert_manager" {
   source            = "../modules/cert-manager"
   domain_name       = var.web_app_domain_name
