@@ -32,7 +32,7 @@ output "oidc_provider" {
   value = local.oidc_url_short
 }
 
-output "vpc_cni_iam_role_arn" {
+output "cni_irsa_role_arn" {
   description = "The ARN of the IAM role for the VPC CNI IRSA"
   value       = aws_iam_role.vpc_cni_irsa.arn
 }

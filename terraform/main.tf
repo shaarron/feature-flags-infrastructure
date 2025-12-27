@@ -76,7 +76,7 @@ module "eks_blueprints_addons" {
 
     vpc-cni = {
       most_recent = true
-      service_account_role_arn = module.eks.cni_irsa_role.iam_role_arn
+      service_account_role_arn = module.eks.cni_irsa_role_arn
     }
 
     coredns = {

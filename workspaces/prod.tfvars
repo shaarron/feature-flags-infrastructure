@@ -1,4 +1,3 @@
-
 # Domain
 web_app_domain_name = "its-sharon.com"
 cert_domain_name    = "*.its-sharon.com"

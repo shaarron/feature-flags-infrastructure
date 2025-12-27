@@ -75,9 +75,14 @@ resource "aws_iam_role" "vpc_cni_irsa" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "vpc_cni_policy" {
+resource "aws_iam_role_policy_attachment" "node_VPC_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.vpc_cni_irsa.name
+}
+
+resource "aws_iam_role_policy_attachment" "nodes_cni" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.eks_nodes.name
 }
 
 resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
