@@ -13,6 +13,7 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 - [**Running using Github Actions workflow**](#running-using-github-actions-workflow)
 
 - [**Prerequisites**](#prerequisites)
+- [**Cost Estimation**](#cost-estimation)
 
 
 
@@ -119,22 +120,16 @@ Estimated monthly infrastructure costs for a **high availability and resilient p
 
 ### Cost Estimation - Development Setup (Optimized)
 
-For a lower-cost development environment, you can reduce redundancy and instance sizes:
-*   **NAT Gateway:** 1 (Single AZ)
-*   **Nodes:** 2x `t3.medium` (Smaller general purpose instances)
-*   **Availability Zones:** 1-2 (Non-HA for cost savings)
+*Mumbai (ap-south-1) | Single-AZ | Spot + Scale-to-Zero*
 
-| Resource | Quantity | Unit Price (Monthly) | Total (Monthly) | Notes |
-|----------|----------|---------------------|-----------------|-------|
-| **EKS Cluster** | 1 | $73.00 | **$73.00** | $0.10/hour flat fee |
-| **EC2 Nodes (`t3.medium`)** | 2 | $32.70 | **$65.40** | On-demand pricing ($0.0448/hr) |
-| **NAT Gateways** | 1 | $32.85 | **$32.85** | Single NAT Gateway ($0.045/hr) |
-| **Network Load Balancer** | 1 | $16.43 | **$16.43** | Base hourly rate ($0.0225/hr) |
-| **EBS Storage (gp3)** | 40 GB | $0.091/GB | **$3.64** | 20GB root volume per node |
-| **VPC Service** | 1 | Free | **$0.00** | Logically isolated virtual network |
-| **Public IPv4 Addresses** | 2 | $3.65 | **$7.30** | $0.005/hr (1 NAT GW + 1 NLB IP) |
-| **Route 53 Hosted Zone** | 1 | $0.50 | **$0.50** | Per hosted zone |
-| **Total** | | | **~$199.12** | *Significant savings (~45%)* |
+| Resource | Quantity | Unit Price (Monthly) | Total (Monthly) | Reduction Tweak |
+|----------|----------|---------------------|-----------------|-----------------|
+| **EKS Control Plane** | 1 | $73.00 | **$73.00** | - |
+| **EC2 Nodes (`r6a.large`)** | 2 | ~$21.00 | **$42.00** | **Spot Instances** (~60% off) |
+| **NAT Gateway** | 1 | $32.85 | **$11.00** | **Scale to 0** (Off-hours) |
+| **Storage (gp3)** | 40 GB | $0.09/GB | **$3.60** | Minimal Root Volumes |
+| **Public IPv4s** | 2 | $3.65 | **$2.40** | **Scale to 0** (Off-hours) |
+| **Total** | | | **~$132.00** | **~65% Total Savings** |
 
 ## Getting started using Github Actions workflow
 
