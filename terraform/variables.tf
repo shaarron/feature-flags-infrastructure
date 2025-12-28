@@ -1,5 +1,6 @@
 #### Shared variables across modules
 variable "common_tags" {
+  description = "Common tags to apply to all resources"
   default = {
     owner     = "SharonK"
     managedBy = "terraform"
@@ -32,7 +33,7 @@ variable "single_nat_gateway" {
 }
 
 variable "vpc_cidrs" {
-  description = "vpc cidrs"
+  description = "The CIDR block for the VPC"
   type        = string
 }
 
@@ -87,6 +88,7 @@ variable "origin_access_control_origin_type" {
 }
 
 variable "origin_domain_name" {
+  description = "The DNS domain name of the custom origin (e.g. NLB DNS name)"
   type    = string
   default = ""
 }
@@ -159,6 +161,7 @@ variable "cf_aliases" {
 
 #### EKS
 variable "cluster_version" {
+  description = "Kubernetes version to use for the EKS cluster"
   type = string
 }
 

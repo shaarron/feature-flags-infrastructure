@@ -5,12 +5,12 @@ A collection of Terraform configurations that provision an entire AWS infrastruc
 ## Table of contents 
 
 - [**Modules**](#modules) 
-- [**Terraform**](#terraform)
+- [**Root Module**](#root-module)
 - [**Workspaces**](#workspaces)
 - [**Terraform Backend**](#terraform-backend)
 - [**OIDC**](#oidc)
-- [**Getting started**](#getting-started)
-- [**Getting started using Github Actions workflow**](#getting-started-using-github-actions-workflow)
+- [**Running manually**](#running-manually)
+- [**Running using Github Actions workflow**](#running-using-github-actions-workflow)
 
 - [**Prerequisites**](#prerequisites)
 
@@ -35,7 +35,7 @@ These modules are composed by the main application stack in `terraform/`.
 
 
 
-### **[Terraform](terraform)**
+### **[Root Module](terraform)**
 
 The main Terraform root module. 
 It wires together all the above modules for a complete infrastructure stack.
@@ -43,7 +43,7 @@ It wires together all the above modules for a complete infrastructure stack.
 - `main.tf` – Orchestrates all core modules (VPC, EKS, storage, etc.)
 - `providers.tf` – AWS, Kubernetes, Helm provider configurations.
 - `variables.tf` – Input variable definitions.
-- `terraform.tfvars` – Default shared across environemnts variable values.
+- `terraform.tfvars` – Default shared across environments variable values.
 - `outputs.tf` – Useful outputs like DNS names, ARNs, endpoints.
   
 
@@ -99,13 +99,50 @@ To successfully apply this Terraform configuration, the IAM user or role running
 
 - **CloudWatch Logs**
 
+## Cost Estimation
+
+Estimated monthly infrastructure costs for a **high availability and resilient production setup**, based on `ap-south-1` (Mumbai) pricing as of Dec 2025. Does not include variable data transfer or request fees.
+
+| Resource | Quantity | Unit Price (Monthly) | Total (Monthly) | Notes |
+|----------|----------|---------------------|-----------------|-------|
+| **EKS Cluster** | 1 | $73.00 | **$73.00** | $0.10/hour flat fee |
+| **EC2 Nodes (`r6a.large`)** | 3 | ~$52.20 | **$156.60** | On-demand pricing ($0.0715/hr) |
+| **NAT Gateways** | 3 | $32.85 | **$98.55** | One per AZ for high availability ($0.045/hr) |
+| **Network Load Balancer** | 1 | $16.43 | **$16.43** | Base hourly rate ($0.0225/hr) |
+| **EBS Storage (gp3)** | 60 GB | $0.091/GB | **$5.46** | 20GB root volume per node |
+| **VPC Service** | 1 | Free | **$0.00** | Logically isolated virtual network |
+| **Public IPv4 Addresses** | 6 | $3.65 | **$21.90** | $0.005/hr (3 NAT GWs + 3 NLB IPs) |
+| **Route 53 Hosted Zone** | 1 | $0.50 | **$0.50** | Per hosted zone |
+| **Total** | | | **~$372.44** | *Excludes data transfer & NLCU charges* |
+
+> **Note:** Costs can vary based on region, instance types, and usage (e.g., NAT Gateway data processing at $0.045/GB, S3 requests, and CloudFront transfer out).
+
+### Cost Estimation - Development Setup (Optimized)
+
+For a lower-cost development environment, you can reduce redundancy and instance sizes:
+*   **NAT Gateway:** 1 (Single AZ)
+*   **Nodes:** 2x `t3.medium` (Smaller general purpose instances)
+*   **Availability Zones:** 1-2 (Non-HA for cost savings)
+
+| Resource | Quantity | Unit Price (Monthly) | Total (Monthly) | Notes |
+|----------|----------|---------------------|-----------------|-------|
+| **EKS Cluster** | 1 | $73.00 | **$73.00** | $0.10/hour flat fee |
+| **EC2 Nodes (`t3.medium`)** | 2 | $32.70 | **$65.40** | On-demand pricing ($0.0448/hr) |
+| **NAT Gateways** | 1 | $32.85 | **$32.85** | Single NAT Gateway ($0.045/hr) |
+| **Network Load Balancer** | 1 | $16.43 | **$16.43** | Base hourly rate ($0.0225/hr) |
+| **EBS Storage (gp3)** | 40 GB | $0.091/GB | **$3.64** | 20GB root volume per node |
+| **VPC Service** | 1 | Free | **$0.00** | Logically isolated virtual network |
+| **Public IPv4 Addresses** | 2 | $3.65 | **$7.30** | $0.005/hr (1 NAT GW + 1 NLB IP) |
+| **Route 53 Hosted Zone** | 1 | $0.50 | **$0.50** | Per hosted zone |
+| **Total** | | | **~$199.12** | *Significant savings (~45%)* |
+
 ## Getting started using Github Actions workflow
 
-### [Feature Flags Infrastructure](.github/workflows/feature-flags-infrastructure.yaml)
+#### [Feature Flags Infrastructure workflow](.github/workflows/feature-flags-infrastructure.yaml)
 
-This workflow validates, plans and applys the terraform files based on the user  provision AWS infrastructure resources.
+This workflow validates, plans and applies the terraform files based on the workspace selected and tfvars file.
 
-## Getting started
+## Running manually
 
 ### 1. Configure Workspace 
 Create workspace based on the required env(prod, dev, staging):
@@ -115,13 +152,13 @@ Create workspace based on the required env(prod, dev, staging):
 terraform workspace new dev
 ```
 
-Swtich to the workspace:
+Switch to the workspace:
 ```
 terraform workspace select dev
 ```
 
 ### 2. Remote State
-If you want to use a **remote state**, you shoud configure it first.
+If you want to use a **remote state**, you should configure it first.
 
 you can create a new bucket or use your own
 
@@ -142,7 +179,7 @@ terraform apply
    bucket = "your-backend-bucket-name"
    region = "ap-south-1"
    ```
-2. Enable Backend in Terraform: In t`erraform/providers.tf`, uncomment the backend block so Terraform knows to use S3:
+2. Enable Backend in Terraform: In `terraform/providers.tf`, uncomment the backend block so Terraform knows to use S3:
    ```
    # backend "s3" {}
    ```
@@ -157,7 +194,7 @@ When initializing Terraform, you must now tell it to use your `backend.hcl` file
    ```
 #### 3. Deploy the whole setup
 
-once you done configuring remote backend, cd into **terraform/** and run the **[terraform commands](#terraform-commands)** based on your env.
+once you are done configuring remote backend, cd into **terraform/** and run the **[terraform commands](#terraform-commands)** based on your env.
 
 ```
 cd terraform/
