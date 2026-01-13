@@ -6,7 +6,7 @@ terraform {
     kubernetes = { source = "hashicorp/kubernetes", version = ">= 2.0" }
   }
 
-  # backend "s3" {}
+  backend "s3" {}
 }
 
 locals {
