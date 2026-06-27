@@ -8,12 +8,7 @@ variable "account_id" {
   type        = string
 }
 
-variable "oidc_provider_arn" {
-  description = "ARN of the EKS OIDC Provider (e.g., module.eks.oidc_provider_arn)"
-  type        = string
-}
-
-variable "oidc_provider" {
-  description = "The OIDC Provider URL (without https://)"
+variable "cluster_name" {
+  description = "The name of the EKS cluster for Pod Identity association"
   type        = string
 }
