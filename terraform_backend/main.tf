@@ -11,7 +11,7 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-module "s3_terrafrom_backend" {
+module "s3_terraform_backend" {
   source                 = "../modules/s3"
   bucket_name            = "feature-flags-terraform-backend-sharon"
   versioning             = true
