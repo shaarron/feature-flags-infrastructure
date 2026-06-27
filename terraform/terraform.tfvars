@@ -27,6 +27,7 @@ ordered_cache_behavior = [{
   cached_methods         = ["GET", "HEAD"]
   cache_policy_optimized = false
   viewer_protocol_policy = "https-only"
-  target_origin_id       = "nlb-origin"
+  target_origin_id       = "backend-contract-origin"
+  is_api_path            = true
 }]
 

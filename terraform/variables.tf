@@ -38,16 +38,18 @@ variable "vpc_cidrs" {
 }
 
 
-#### Domain
-variable "web_app_domain_name" {
-  description = "Domain name for the web application"
+#### ArgoCD
+variable "argocd_target_revision" {
+  description = "Git branch/tag ArgoCD will sync from in the feature-flags-resources repo"
   type        = string
+  default     = "main"
 }
 
-variable "cert_domain_name" {
-  description = "Domain name for the SSL certificate (for CloudFront)"
-  type        = string
 
+#### Domain
+variable "base_domain" {
+  description = "Base domain name for the environment (e.g. sharon-k.com). Subdomains are derived automatically."
+  type        = string
 }
 
 
@@ -82,20 +84,16 @@ variable "server_side_encryption" {
 
 
 #### CloudFront
+
 variable "origin_access_control_origin_type" {
   description = "Origin access control origin type (e.g., s3)"
   type        = string
 }
 
-variable "origin_domain_name" {
-  description = "The DNS domain name of the custom origin (e.g. NLB DNS name)"
-  type    = string
-  default = ""
-}
 
 variable "origin_id" {
   type    = string
-  default = "nlb-origin"
+  default = "backend-contract-origin"
 }
 
 variable "origin_protocol_policy" {
@@ -131,6 +129,7 @@ variable "ordered_cache_behavior" {
     viewer_protocol_policy = string
     path_pattern           = string
     cache_policy_optimized = bool # use the optimized cache policy (true) or caching disabled (false).
+    is_api_path            = bool # when true, uses AllViewerExceptHostHeader so CF sends Host: origin domain, not viewer domain.
   }))
   default = []
 }
@@ -168,6 +167,8 @@ variable "cluster_version" {
 variable "kms_key_arn" {
   description = "The kms key arn for the eks cluster"
   type        = string
+  default     = null
+
 }
 
 variable "node_type" {

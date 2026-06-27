@@ -1,28 +1,17 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_route53_zone" "main" {
+  name = var.base_domain
+}
+
 locals {
-  account_id  = data.aws_caller_identity.current.account_id
-  name_prefix = terraform.workspace
-  full_dns_name = data.kubernetes_service.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
-  lb_name_full  = split(".", local.full_dns_name)[0]
-  lb_name       = substr(local.lb_name_full, 0, 32)
+  account_id    = data.aws_caller_identity.current.account_id
+  name_prefix   = terraform.workspace
+  env_subdomain = local.name_prefix == "prod" ? "" : "${local.name_prefix}."
+  cert_domain   = "*.${local.env_subdomain}${var.base_domain}"
+  origin_domain = "backend.${local.env_subdomain}${var.base_domain}"
 }
 
-data "aws_lb" "ingress_nlb" {
-  name = local.lb_name
-}
-
-data "kubernetes_service" "ingress_nginx_controller" {
-  metadata {
-    name      = "ingress-nginx-controller"
-    namespace = "ingress-nginx"
-  }
-
-  depends_on = [
-    time_sleep.wait_5_minutes
-  ]
-
-}
 
 module "network" {
   source             = "../modules/network"
@@ -41,6 +30,7 @@ module "eks" {
   vpc_id                                   = module.network.vpc_id
   enable_cluster_creator_admin_permissions = true
   kms_key_arn                              = var.kms_key_arn
+  route53_zone_arns                        = ["arn:aws:route53:::hostedzone/${data.aws_route53_zone.main.zone_id}"]
 
   node_groups = {
     main = {
@@ -86,6 +76,10 @@ module "eks_blueprints_addons" {
     kube-proxy = {
       most_recent = true
     }
+
+    eks-pod-identity-agent = {
+      most_recent = true
+    }
   }
 }
 
@@ -128,7 +122,8 @@ resource "helm_release" "argocd" {
 
 resource "kubectl_manifest" "argocd_root_app" {
   yaml_body = templatefile("root-app.yaml.tpl", {
-    env_name = terraform.workspace
+    env_name        = terraform.workspace
+    target_revision = var.argocd_target_revision
   })
 
   depends_on = [
@@ -136,10 +131,6 @@ resource "kubectl_manifest" "argocd_root_app" {
   ]
 }
 
-resource "time_sleep" "wait_5_minutes" {
-  depends_on      = [kubectl_manifest.argocd_root_app]
-  create_duration = "5m"
-}
 
 module "s3_frontend" {
   source                      = "../modules/s3"
@@ -161,10 +152,10 @@ module "cloudfront" {
   source      = "../modules/cloudfront"
   aws_region  = var.aws_region
   name_prefix = local.name_prefix
-  aliases     = ["feature-flags${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}.${var.web_app_domain_name}"]
+  aliases     = ["feature-flags.${local.env_subdomain}${var.base_domain}"]
 
-  origin_domain_name     = local.full_dns_name
-  origin_id              = "nlb-origin"
+  origin_domain_name     = local.origin_domain
+  origin_id              = "backend-contract-origin"
   origin_protocol_policy = "http-only"
   origin_ssl_protocols   = ["TLSv1.2"]
 
@@ -176,7 +167,7 @@ module "cloudfront" {
   default_cache_behavior            = var.default_cache_behavior
   geo_restriction_type              = var.geo_restriction_type
   origin_access_control_origin_type = var.origin_access_control_origin_type
-  cert_domain_name                  = var.cert_domain_name
+  cert_domain_name                  = local.cert_domain
 
   depends_on = [
     module.cert_manager
@@ -192,21 +183,11 @@ module "route53" {
   ]
 
   aws_region  = var.aws_region
-  domain_name = var.web_app_domain_name
-
-  nlb_hostname = local.full_dns_name
-  nlb_zone_id  = data.aws_lb.ingress_nlb.zone_id
+  domain_name = var.base_domain
 
   sub_domains = {
     "feature-flags${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}" = {
-      type  = "cloudfront"
       cf_id = module.cloudfront.cloudfront_distribution_id
-    }
-    "grafana${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}" = {
-      type     = "nlb"
-    }
-    "kibana${local.name_prefix != "prod" ? ".${local.name_prefix}" : ""}" = {
-      type     = "nlb"
     }
   }
 }
@@ -214,67 +195,17 @@ module "route53" {
 module "external_secrets_iam" {
   source = "../modules/external-secrets-iam"
 
-  account_id = local.account_id
-  region     = var.aws_region
-
-  oidc_provider_arn = module.eks.oidc_provider_arn
-  oidc_provider     = module.eks.oidc_provider
-}
-
-resource "kubernetes_namespace" "external_secrets" {
-  metadata {
-    name = "external-secrets"
-  }
-
-  depends_on = [module.eks]
-}
-
-resource "kubernetes_service_account" "external_secrets" {
-  metadata {
-    name      = "external-secrets-sa"
-    namespace = kubernetes_namespace.external_secrets.metadata[0].name
-
-    annotations = {
-      "eks.amazonaws.com/role-arn" = module.external_secrets_iam.role_arn
-    }
-
-    labels = {
-      "app.kubernetes.io/name" = "external-secrets"
-    }
-  }
-
-  automount_service_account_token = true
-  depends_on                      = [module.external_secrets_iam, kubernetes_namespace.external_secrets]
+  account_id   = local.account_id
+  region       = var.aws_region
+  cluster_name = module.eks.cluster_name
 }
 
 module "cert_manager" {
-  source            = "../modules/cert-manager"
-  domain_name       = var.web_app_domain_name
-  oidc_provider_arn = module.eks.oidc_provider_arn
-  oidc_provider_url = module.eks.cluster_oidc_issuer_url
+  source       = "../modules/cert-manager"
+  domain_name  = var.base_domain
+  cluster_name = module.eks.cluster_name
 
   depends_on = [
     module.eks
   ]
-}
-
-resource "kubernetes_namespace" "cert_manager" {
-  metadata {
-    name = "cert-manager"
-  }
-  depends_on = [module.eks]
-}
-
-resource "kubernetes_service_account" "cert_manager" {
-  metadata {
-    name      = "cert-manager"
-    namespace = kubernetes_namespace.cert_manager.metadata[0].name
-    annotations = {
-      "eks.amazonaws.com/role-arn" = module.cert_manager.role_arn
-    }
-    labels = {
-      "app.kubernetes.io/name" = "cert-manager"
-    }
-  }
-  automount_service_account_token = true
 }

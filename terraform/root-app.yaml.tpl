@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
+  name: root-${env_name}
   namespace: argocd
 
 spec:
@@ -9,15 +9,17 @@ spec:
 
   source:
     repoURL: https://github.com/shaarron/feature-flags-resources.git
-    targetRevision: main
-    path: argocd/environments/${env_name}
-    directory:
-      recurse: true
-    
+    targetRevision: ${target_revision}
+    path: argocd/chart
+    helm:
+      valueFiles:
+        - ../environments/values.yaml
+        - ../environments/${env_name}/values.yaml
+
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
-  
+
   syncPolicy:
     automated:
       prune: true
