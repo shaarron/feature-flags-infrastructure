@@ -25,14 +25,14 @@ These modules are composed by the main application stack in `terraform/`.
 
 | Module                   | Purpose                                                                                                                                      |
 |--------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `cloudfront/`            | Configures a CloudFront distribution with OAC/OAI, custom cache policies, and Route 53 aliases.                                             |
+| `cloudfront/`            | Configures a CloudFront distribution with OAC/OAI, custom cache/request policies, and Route 53 aliases.                                     |
 | `ebs-csi-storageclass/`  | Creates EBS CSI storage classes (e.g., gp3), sets one as default.                                                                            |
-| `network/`               | Creates the VPC, subnets, route tables, IGWs, NAT gateways.                                                                                   |
-| `route53/`               | Creates DNS records for S3/CloudFront/NLB.                                                                                                   |
+| `network/`               | Creates the VPC, subnets (with Kubernetes load balancer subnet discovery tags), route tables, IGWs, NAT gateways.                            |
+| `route53/`               | Creates CloudFront alias DNS records for the hosted zone.                                                                                    |
 | `s3/`                    | Creates S3 buckets with encryption and access control.                                                                                       |
-| `cert-manager/`          | Configures IAM roles (IRSA) for cert-manager to manage Route53 DNS records for DNS-01 challenges.                                            |
-| `external-secrets-iam/`  | Configures IAM permissions for External Secrets Operator to read from AWS Secrets Manager.                                                   |
-| `eks/`                   | Creates an EKS cluster with managed node groups, IAM roles for service accounts (IRSA), and necessary security groups.                       |
+| `cert-manager/`          | Configures IAM role via EKS Pod Identity for cert-manager to manage Route53 DNS records for DNS-01 challenges.                               |
+| `external-secrets-iam/`  | Configures IAM role via EKS Pod Identity for External Secrets Operator to read from AWS Secrets Manager.                                     |
+| `eks/`                   | Creates an EKS cluster with managed node groups, Pod Identity agent addon, ExternalDNS IAM, KMS encryption, and necessary security groups.   |
 
 
 
@@ -52,14 +52,19 @@ It wires together all the above modules for a complete infrastructure stack.
 
 Environment-specific variable overrides to support **multi-env deployments**.
 
- `dev.tfvars`, `staging.tfvars`, `prod.tfvars`
+`dev.tfvars`, `staging.tfvars`, `prod.tfvars`
+
+Each file sets at minimum:
+- `base_domain` — the root domain for the environment (subdomains and cert domain are derived automatically)
+- `argocd_target_revision` — the Git branch/tag ArgoCD syncs from in the resources repo (defaults to `main`)
 
 
 ### **[OIDC](oidc)**
 
-A standalone configuration located in `oidc/`. 
-- **Purpose:** Sets up the IAM OIDC provider to allow GitHub Actions to assume AWS roles.
-- **Usage:** This must be applied separately **before** running the main pipeline if you intend to use GitHub Actions.
+A standalone configuration located in `oidc/`.
+- **Purpose:** Sets up a **GitHub Actions → AWS** OIDC trust — creates the IAM OIDC provider for `token.actions.githubusercontent.com` and the scoped `gha-oidc-deploy` role that GitHub Actions assumes to run Terraform and push to ECR.
+- **Note:** This is unrelated to EKS Pod Identity or IRSA. Workloads running inside the cluster authenticate to AWS via EKS Pod Identity (configured per-module). This OIDC module is strictly for CI/CD.
+- **Usage:** Apply this once **before** running the main pipeline if you intend to use GitHub Actions.
 
 ### **[Terraform Backend](terraform_backend)**
 
@@ -72,10 +77,10 @@ Provisioning the remote S3 backend for Terraform state.
 
 - Terraform (>= 1.0 recommended)
 - AWS CLI configured with appropriate credentials and region
-- **Route 53 Hosted Zone:** A public hosted zone for your domain (e.g., `your-domain.com`) must already exist in the AWS account.
-- **ACM Certificate:** A valid SSL/TLS certificate for your domain (or wildcard, e.g., `*.your-domain.com`) must exist in the **us-east-1** (N. Virginia) region.
-  > **Note:** CloudFront requires certificates to be in `us-east-1`, even if your main infrastructure is in other region (e.g, ap-south-1).
-- Prepare terraform.tfvars for each module with the required variables.
+- **Route 53 Hosted Zone:** A public hosted zone for `base_domain` (e.g., `your-domain.com`) must already exist in the AWS account.
+- **ACM Certificate:** A wildcard certificate for `*.your-domain.com` (and per-env variants like `*.dev.your-domain.com`) must exist in the **us-east-1** (N. Virginia) region — CloudFront requires certificates there regardless of the main infrastructure region.
+  > Subdomains and the cert domain are derived automatically from `base_domain`, so no separate `cert_domain_name` variable is needed.
+- Prepare `terraform.tfvars` and a workspace-specific `*.tfvars` for each environment with the required variables.
 
 
 ## Required AWS Permissions & IAM Roles
@@ -99,6 +104,8 @@ To successfully apply this Terraform configuration, the IAM user or role running
 - **ACM**
 
 - **CloudWatch Logs**
+
+- **KMS** (EKS secrets envelope encryption — a key is created automatically if `kms_key_arn` is not provided)
 
 ## Cost Estimation
 
@@ -187,9 +194,9 @@ When initializing Terraform, you must now tell it to use your `backend.hcl` file
 
    terraform init -backend-config="backend.hcl" -backend-config="key=workspaces/dev/terraform.tfstate"
    ```
-#### 3. Deploy the whole setup
+### 3. Deploy the whole setup
 
-once you are done configuring remote backend, cd into **terraform/** and run the **[terraform commands](#terraform-commands)** based on your env.
+Once you are done configuring the remote backend, cd into **terraform/** and run the **[terraform commands](#terraform-commands)** based on your env.
 
 ```
 cd terraform/
@@ -251,5 +258,5 @@ Your IAM user, role, or federated identity (e.g., GitHub OIDC) lacks the necessa
 
    * Route53 → route53:ChangeResourceRecordSets, route53:ListHostedZones
 
-   * IAM/OIDC → iam:PassRole, iam:GetRole, iam:CreateOpenIDConnectProvider
+   * IAM/EKS Pod Identity → iam:PassRole, iam:GetRole, iam:CreateRole, eks:CreatePodIdentityAssociation
 

@@ -3,12 +3,7 @@ variable "domain_name" {
   type        = string
 }
 
-variable "oidc_provider_arn" {
-  description = "The ARN of the OIDC provider"
-  type        = string
-}
-
-variable "oidc_provider_url" {
-  description = "The URL of the OIDC provider"
+variable "cluster_name" {
+  description = "The name of the EKS cluster for Pod Identity association"
   type        = string
 }

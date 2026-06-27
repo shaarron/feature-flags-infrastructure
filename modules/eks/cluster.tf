@@ -1,3 +1,13 @@
+resource "aws_kms_key" "eks" {
+  count                   = var.kms_key_arn == null ? 1 : 0
+  enable_key_rotation     = true
+  deletion_window_in_days = 7
+}
+
+locals {
+  final_kms_key_arn = var.kms_key_arn != null ? var.kms_key_arn : aws_kms_key.eks[0].arn
+}
+
 resource "aws_eks_cluster" "this" {
   name     = "${var.cluster_name}"
   role_arn = aws_iam_role.eks_cluster.arn
@@ -10,15 +20,12 @@ resource "aws_eks_cluster" "this" {
     bootstrap_cluster_creator_admin_permissions = false
   }
 
-    dynamic "encryption_config" {
-        for_each = var.kms_key_arn != null ? [1] : []
-        content {
-        provider {
-            key_arn = var.kms_key_arn
-        }
-        resources = ["secrets"]
-        }
+  encryption_config {
+    provider {
+      key_arn = local.final_kms_key_arn
     }
+    resources = ["secrets"]
+  }
 
   vpc_config {
     subnet_ids              = var.subnet_ids

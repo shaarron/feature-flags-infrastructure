@@ -35,7 +35,7 @@ variable "origin_domain_name" {
 
 variable "origin_id" {
   type    = string
-  default = "nlb-origin"
+  default = "backend-contract-origin"
 }
 
 variable "origin_protocol_policy" {
@@ -68,6 +68,7 @@ variable "ordered_cache_behavior" {
     viewer_protocol_policy = string
     path_pattern           = string
     cache_policy_optimized = bool # use the optimized cache policy (true) or caching disabled (false).
+    is_api_path            = bool # when true, uses AllViewerExceptHostHeader so CF sends Host: origin domain, not viewer domain.
   }))
   default = []
 }

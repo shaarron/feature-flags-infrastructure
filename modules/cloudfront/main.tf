@@ -6,24 +6,19 @@ terraform {
   }
 }
 
-data "aws_caller_identity" "current" {}
-
-# Cache policies
-data "aws_cloudfront_cache_policy" "caching_optimized" {
-  name = "Managed-CachingOptimized"
-}
-data "aws_cloudfront_cache_policy" "caching_disabled" {
-  name = "Managed-CachingDisabled"
-}
-
-data "aws_cloudfront_origin_request_policy" "all_viewer" {
-  name = "Managed-AllViewer"
+# Hardcoded AWS managed policy IDs to avoid "inconsistent final plan" errors
+# caused by cache_policy_id being Computed in the provider schema.
+# These are stable, permanent IDs for AWS managed policies.
+locals {
+  cache_policy_caching_optimized                = "658327ea-f89d-4fab-a63d-7e88639e58f6" # Managed-CachingOptimized
+  cache_policy_caching_disabled                 = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # Managed-CachingDisabled
+  origin_request_policy_all_viewer              = "216adef6-5c7f-47e4-b989-5492eafa07d3" # Managed-AllViewer
+  origin_request_policy_all_viewer_except_host  = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # Managed-AllViewerExceptHostHeader
 }
 
 data "aws_acm_certificate" "cf_cert" {
   domain   = var.cert_domain_name
   statuses = ["ISSUED"]
-
 }
 
 # Origin Access Control
@@ -51,16 +46,18 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   # Custom Origin
-  origin {
-    domain_name = var.origin_domain_name
-    origin_id   = var.origin_id
+  dynamic "origin" {
+    for_each = var.origin_domain_name != null && var.origin_domain_name != "" ? [var.origin_domain_name] : []
+    content {
+      domain_name = origin.value
+      origin_id   = var.origin_id
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = var.origin_protocol_policy
-      origin_ssl_protocols   = toset(var.origin_ssl_protocols)
-
+      custom_origin_config {
+        http_port              = 80
+        https_port             = 443
+        origin_protocol_policy = var.origin_protocol_policy
+        origin_ssl_protocols   = toset(var.origin_ssl_protocols)
+      }
     }
   }
 
@@ -70,8 +67,8 @@ resource "aws_cloudfront_distribution" "this" {
     target_origin_id       = var.default_cache_behavior.target_origin_id
     viewer_protocol_policy = var.default_cache_behavior.viewer_protocol_policy
 
-    cache_policy_id = var.default_cache_behavior.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
-    origin_request_policy_id = var.default_cache_behavior.cache_policy_optimized ? null : data.aws_cloudfront_origin_request_policy.all_viewer.id
+    cache_policy_id = var.default_cache_behavior.cache_policy_optimized ? local.cache_policy_caching_optimized : local.cache_policy_caching_disabled
+    origin_request_policy_id = var.default_cache_behavior.cache_policy_optimized ? null : local.origin_request_policy_all_viewer
     min_ttl     = null
     default_ttl = null
     max_ttl     = null
@@ -87,8 +84,10 @@ resource "aws_cloudfront_distribution" "this" {
       viewer_protocol_policy   = ordered_cache_behavior.value.viewer_protocol_policy
       target_origin_id         = ordered_cache_behavior.value.target_origin_id
 
-      cache_policy_id = ordered_cache_behavior.value.cache_policy_optimized ? data.aws_cloudfront_cache_policy.caching_optimized.id : data.aws_cloudfront_cache_policy.caching_disabled.id
-      origin_request_policy_id = ordered_cache_behavior.value.cache_policy_optimized ? null : "216adef6-5c7f-47e4-b989-5492eafa07d3"
+      cache_policy_id = ordered_cache_behavior.value.cache_policy_optimized ? local.cache_policy_caching_optimized : local.cache_policy_caching_disabled
+      origin_request_policy_id = ordered_cache_behavior.value.cache_policy_optimized ? null : (
+        ordered_cache_behavior.value.is_api_path ? local.origin_request_policy_all_viewer_except_host : local.origin_request_policy_all_viewer
+      )
       min_ttl     = null
       default_ttl = null
       max_ttl     = null

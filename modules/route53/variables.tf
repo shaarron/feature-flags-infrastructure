@@ -8,19 +8,8 @@ variable "domain_name" {
 }
 
 variable "sub_domains" {
-  description = "Map of subdomains and their target types"
+  description = "Map of subdomains to their CloudFront distribution IDs"
   type = map(object({
-    type     = string           # "nlb" or "cloudfront"
-    nlb_name = optional(string) # if type = "nlb"
-    cf_id    = optional(string) # if type = "cloudfront"
+    cf_id = string
   }))
-}
-
-variable "nlb_hostname" {
-   type = string 
-
-}
-variable "nlb_zone_id"  {
-   type = string 
-   
 }

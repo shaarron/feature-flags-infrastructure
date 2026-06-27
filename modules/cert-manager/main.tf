@@ -33,29 +33,34 @@ resource "aws_iam_policy" "cert_manager_route53" {
   })
 }
 
-data "aws_iam_policy_document" "cert_manager_assume_role" {
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-
-    principals {
-      type        = "Federated"
-      identifiers = [var.oidc_provider_arn]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = "${replace(var.oidc_provider_url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:cert-manager:cert-manager"]
-    }
-  }
-}
-
 resource "aws_iam_role" "cert_manager_dns01" {
-  name               = "cert-manager-dns01"
-  assume_role_policy = data.aws_iam_policy_document.cert_manager_assume_role.json
+  name = "cert-manager-dns01"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "pods.eks.amazonaws.com"
+        }
+        Action = [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "cert_manager_dns01_attach" {
   role       = aws_iam_role.cert_manager_dns01.name
   policy_arn = aws_iam_policy.cert_manager_route53.arn
+}
+
+resource "aws_eks_pod_identity_association" "cert_manager" {
+  cluster_name    = var.cluster_name
+  namespace       = "cert-manager"
+  service_account = "cert-manager"
+  role_arn        = aws_iam_role.cert_manager_dns01.arn
 }

@@ -1,6 +1,8 @@
 # Domain
-web_app_domain_name = "its-sharon.com"
-cert_domain_name    = "*.its-sharon.com"
+base_domain = "sharon-k.com"
+
+# ArgoCD
+argocd_target_revision = "main"
 
 # Network
 availability_zones = 3
@@ -12,4 +14,3 @@ node_type       = "r6a.large"
 node_group_desired_size = 2
 node_group_min_size = 1
 node_group_max_size = 4
-#kms_key_arn = <prod kms key arn>
