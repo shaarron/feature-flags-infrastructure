@@ -47,6 +47,12 @@ variable "enable_cluster_creator_admin_permissions" {
 }
 
 variable "kms_key_arn" {
-  description = "The ARN of the KMS key to use for envelope encryption of Kubernetes secrets. If null, encryption is not enabled."
+  description = "The ARN of an existing KMS key to use for envelope encryption of Kubernetes secrets. If null, a new KMS key will be created dynamically for the cluster."
   type        = string
+  default     = null
+}
+
+variable "route53_zone_arns" {
+  description = "List of Route53 hosted zone ARNs that ExternalDNS is allowed to manage records in"
+  type        = list(string)
 }

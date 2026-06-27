@@ -28,12 +28,14 @@ output "oidc_provider_arn" {
   value = aws_iam_openid_connect_provider.this.arn
 }
 
-output "oidc_provider" {
-  description = "The URL of the OIDC Provider for IRSA without the https:// prefix"
-  value = local.oidc_url_short
-}
 
 output "cni_irsa_role_arn" {
   description = "The ARN of the IAM role for the VPC CNI IRSA"
   value       = aws_iam_role.vpc_cni_irsa.arn
 }
+
+output "kms_key_arn" {
+  description = "The ARN of the KMS key used for envelope encryption of Kubernetes secrets"
+  value       = local.final_kms_key_arn
+}
+

@@ -90,10 +90,64 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOn
   role       = aws_iam_role.eks_nodes.name
 }
 
+resource "aws_iam_policy" "external_dns" {
+  name = "${var.name_prefix}-external-dns-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["route53:ChangeResourceRecordSets"]
+        Resource = var.route53_zone_arns
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListResourceRecordSets"
+        ]
+        Resource = ["*"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "external_dns_irsa" {
+  name = "${var.name_prefix}-external-dns-irsa"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "pods.eks.amazonaws.com"
+        }
+        Action = [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "external_dns" {
+  policy_arn = aws_iam_policy.external_dns.arn
+  role       = aws_iam_role.external_dns_irsa.name
+}
+
+resource "aws_eks_pod_identity_association" "external_dns" {
+  cluster_name    = aws_eks_cluster.this.name
+  namespace       = "external-dns"
+  service_account = "external-dns-sa"
+  role_arn        = aws_iam_role.external_dns_irsa.arn
+}
+
 resource "aws_iam_role_policy" "eks_kms_access" {
-  count = var.kms_key_arn != null ? 1 : 0
-  name  = "${var.name_prefix}-kms-access"
-  role  = aws_iam_role.eks_cluster.id
+  name = "${var.name_prefix}-kms-access"
+  role = aws_iam_role.eks_cluster.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -107,7 +161,7 @@ resource "aws_iam_role_policy" "eks_kms_access" {
           "kms:DescribeKey"
         ]
         Effect   = "Allow"
-        Resource = var.kms_key_arn
+        Resource = local.final_kms_key_arn
       }
     ]
   })
